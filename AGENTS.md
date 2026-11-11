@@ -48,6 +48,7 @@ Planned code layout (create when the first epic needs it): `backend/` (Cargo wor
 - Each epic is `docs/epics/EXX-name.md`; issues inside have IDs like `E05-03` and a checkbox status.
 - Work **one epic (or part of an epic) per session/PR**. Start by reading the epic, its dependencies and `docs/decisions.md`.
 - When finishing issues: tick the checkboxes in the epic, update the status table in `docs/roadmap.md`, and update affected docs.
+- GitHub issues mirror the epics (epic issue + one sub-issue per task; labels `epic`, `task`, `phase-N`) and are created phase by phase; see `docs/epics/README.md` and `docs/roadmap.md`. Reference the task issue in the PR (`Closes #N`).
 - If scope changes, edit the epic instead of silently deviating; record important decisions in `docs/decisions.md`.
 - Legal topics (GoBD, tax, retention) are implemented to the best knowledge but must be flagged for review by a tax advisor.
 

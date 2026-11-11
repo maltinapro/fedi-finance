@@ -2,6 +2,9 @@
 
 Status: `offen` · `in Arbeit` · `fertig`. Nach jedem abgeschlossenen Epic/Issue hier und in der Epic-Datei aktualisieren.
 
+GitHub-Issues werden **phasenweise** angelegt (Epic-Issue + Sub-Issues je Task, Labels `epic`/`task`/`phase-N`).
+Angelegt: Phase 0 (E00 #2, E01 #11, E02 #22, E03 #32). Phasen 1–4 folgen, sobald die vorherige Phase abgeschlossen ist.
+
 ## Phasen
 
 - **Phase 0 – Fundament**: E00, E01, E02, E03
