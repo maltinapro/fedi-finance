@@ -5,6 +5,8 @@
 | [architecture.md](architecture.md) | Komponenten, Mandantenmodell, Datenhaltung |
 | [federation.md](federation.md) | ActivityPub-Design, Discovery, Nachrichtentypen |
 | [compliance.md](compliance.md) | GoBD, Aufbewahrung, E-Rechnung, DSGVO |
+| [pdfcraft.md](pdfcraft.md) | PDFCraft: Funktionsumfang, REST-Anbindung, Betrieb, Frontend-Strategie, Anforderungen |
+| [design.md](design.md) | Design-Leitfaden (Material Design 3, übernommen aus PDFCraft) |
 | [ai.md](ai.md) | KI-Konzept, Modellempfehlung, Training |
 | [operations.md](operations.md) | Kubernetes, Helm, Backup, Export |
 | [decisions.md](decisions.md) | Getroffene Entscheidungen und offene Fragen |

@@ -6,7 +6,7 @@
             ┌──────────────── Kunde A (Namespace tenant-a, Domain a.example) ───────────────┐
  Browser ──▶│ Ingress ─▶ Frontend (TS) ─▶ Backend (Rust) ─┬─▶ PostgreSQL (+pgvector)         │
             │                                             ├─▶ Dateisystem/PVC (PDF-Archiv)   │
-            │                                             ├─▶ PDFCraft (PDF-Erzeugung)       │
+            │                                             ├─▶ PDFCraft (REST, zustandslos)   │
             │                                             ├─▶ AI-Gateway ─▶ LLM-Serving      │
             │                                             └─▶ Bank-Connector                 │
             └───────────────────────▲──────────────────────────────────────────────────────┘
@@ -14,7 +14,8 @@
             ┌───────────────────────▼──────────────────────────────────────────────────────┐
             │ Kunde B (Namespace tenant-b, Domain b.example) – identischer Aufbau           │
             └──────────────────────────────────────────────────────────────────────────────┘
- Cluster-weit: Keycloak (Realm je Mandant), Velero, Ingress, cert-manager, Monitoring, (GPU-)LLM-Serving
+ Cluster-weit: Keycloak (Realm je Mandant), Velero, Ingress, cert-manager, Monitoring, (GPU-)LLM-Serving,
+               PDFCraft + Valkey (geteilt, Vorschlag; alternativ je Mandant, siehe pdfcraft.md)
 ```
 
 ## Komponenten
@@ -22,15 +23,21 @@
 | Komponente | Technologie | Aufgabe |
 | --- | --- | --- |
 | Backend | Rust (Axum, SQLx, Tokio) | REST/JSON-API, Buchungslogik, Föderation, Archiv, Jobs |
-| Frontend | TypeScript (Vorschlag: React + Vite) | Web-UI, KI-Chat |
+| Frontend | TypeScript, React 19 + Vite wie PDFCraft; Material Design 3 mit dem PDFCraft-Design-System ([design.md](design.md)) | Web-UI, Belegeditor, KI-Chat |
 | Datenbank | PostgreSQL (Betrieb via CloudNativePG) | Stammdaten, Buchungen, Audit-Log, Vektorindex (pgvector) |
 | Dokumentenspeicher | Dateisystem/PVC, hash-adressiert | Unveränderliche PDFs, Anhänge, Archiv |
-| PDF | PDFCraft | Erzeugung aller PDFs (Rechnungen, Berichte, ggf. PDF/A, ZUGFeRD) |
+| PDF | [PDFCraft](pdfcraft.md) (Rust, REST `/v1`, zustandslos; Valkey nur für Token/Rate-Limit) | Rendert alle PDFs (6 Belegarten, 3 Designs, PDF/A-3b mit ZUGFeRD/XRechnung); speichert nichts – Ablage macht FediFinance |
 | Identity | Keycloak | Login, SSO (OIDC/SAML, externe IdPs), Rollen |
 | Föderation | ActivityPub im Backend | Austausch mit anderen FediFinance-Servern |
 | AI-Gateway | TypeScript/Node.js oder Rust (siehe decisions.md) | RAG, Tool-Calls, Mandantentrennung, Chatverlauf |
 | LLM-Serving | vLLM (GPU) / llama.cpp (CPU, Entwicklung) | Inferenz, später LoRA je Mandant |
 | Backup | Velero + DB-Backups/WAL | Cluster- und Datenbackup |
+
+## PDF-Erzeugung und Gestaltung
+
+FediFinance ruft das PDFCraft-Backend per REST auf (Vorschau über einen Backend-Proxy, finale Erzeugung bei der
+Freigabe) und speichert die Ergebnisse; der Browser erhält nie ein PDFCraft-Token. Das Frontend übernimmt das
+Material-Design-3-Fundament und den Papier-Editor von PDFCraft. Details: [pdfcraft.md](pdfcraft.md), [design.md](design.md).
 
 ## Mandantenmodell
 
@@ -44,6 +51,8 @@
 
 - Strukturierte Daten in PostgreSQL. Gebuchte Datensätze sind append-only; Korrekturen via Storno-Buchung.
 - PDFs und Belege im Dateisystem, adressiert über SHA-256; Metadaten (Hash, Zeitstempel, Aufbewahrungsfrist) in der DB.
+- Von PDFCraft erzeugte PDFs werden bei der Freigabe einmal gerendert und mit eingebettetem XML und Render-Snapshot
+  abgelegt, danach nie neu erzeugt ([pdfcraft.md](pdfcraft.md#3-integrationsarchitektur)).
 - Audit-Log (unveränderlich, Hash-Kette) für alle buchungs- und sicherheitsrelevanten Aktionen.
 - Datenminimierung: nur notwendige Felder; Lösch-/Sperrkonzept siehe [compliance.md](compliance.md).
 
@@ -51,7 +60,7 @@
 
 ```
 backend/        Cargo workspace (api, domain, federation, archive, ...)
-frontend/       TypeScript-Frontend
+frontend/       TypeScript-Frontend (src/design/ = aus PDFCraft übernommenes Design-System, siehe UPSTREAM.md)
 ai/             AI-Gateway, Evaluierung, Trainingspipeline
 deploy/helm/    Helm-Charts (fedifinance, Cluster-Basis)
 docs/           Dokumentation und Epics

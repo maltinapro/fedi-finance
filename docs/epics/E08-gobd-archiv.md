@@ -12,7 +12,7 @@ Revisionssicheres Ablegen aller Belege/PDFs im Dateisystem mit Hashes, Zeitstemp
 - Jedes Dokument ist unveränderbar abgelegt, mit Beleg verknüpft, Hash wird periodisch geprüft; Fristen werden verwaltet; Betriebsprüfer-Export vorhanden.
 
 ## Issues
-- [ ] **E08-01 Dokumentenspeicher** – Hash-adressierte Ablage (SHA-256) auf PVC, Metadaten in DB, Write-once, Pfad-Sicherheit. AK: Überschreiben unmöglich.
+- [ ] **E08-01 Dokumentenspeicher** – Hash-adressierte Ablage (SHA-256) auf PVC, Metadaten in DB, Write-once, Pfad-Sicherheit; zu jedem von PDFCraft erzeugten PDF auch das eingebettete XML und der Render-Snapshot (pdfcraft.md Abschnitt 3). AK: Überschreiben unmöglich.
 - [ ] **E08-02 Upload & Belegerfassung** – Upload (PDF/Bild/XML), Virenscan (ClamAV), Typprüfung, Größenlimits, OCR-Hook (E14). AK: Scan-Test.
 - [ ] **E08-03 Beleg ↔ Buchung Verknüpfung** – Pflichtverknüpfung, „Beleg fehlt"-Auswertung. AK: Bericht.
 - [ ] **E08-04 Integritätsprüfung** – Periodischer Job prüft Hashes, Alarm bei Abweichung. AK: Manipulationstest.

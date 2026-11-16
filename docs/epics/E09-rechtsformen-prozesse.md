@@ -19,7 +19,7 @@ Je Rechtsform die notwendigen Prozesse abbilden (Profile/Feature-Flags), inkl. A
 - [ ] **E09-05 Umsatzsteuer-Voranmeldung** – Kennzahlen berechnen, XML-Export; Übermittlung per ELSTER nach Entscheidung (decisions.md Nr. 4). AK: Abgleich mit Testdaten.
 - [ ] **E09-06 Jahresabschluss-Workflow** – Checkliste, Periodenabschluss, Eröffnungsvorträge, Sperre. AK: Workflow im UI.
 - [ ] **E09-07 Kapitalgesellschaft** – Gesellschafterkonten, Gewinnverwendung, E-Bilanz-Export (Taxonomie), Offenlegungs-Hinweise. AK: Beispiel-Export.
-- [ ] **E09-08 Mahnwesen** – Mahnstufen, Verzugszinsen, Mahngebühren, Mahnlauf. AK: Mahnungs-PDF (E07-04).
+- [ ] **E09-08 Mahnwesen** – Mahnstufen, Verzugszinsen, Mahngebühren, Mahnlauf. AK: Mahnungs-PDF (E07-09, PDFCraft-Anforderung R5).
 - [ ] **E09-09 Zahlungsverwaltung** – Zahlungsziele, Skonto, offene Posten, Zahlungsvorschläge (SEPA-Export pain.001). AK: Export validiert.
 - [ ] **E09-10 Export für Steuerberater** – DATEV-Format (CSV) optional, Prüfer-Export. AK: Importtest.
 - [ ] **E09-11 Weitere Rechtsformen** – e. V., Österreich/Schweiz (später). AK: Entscheidung dokumentiert.

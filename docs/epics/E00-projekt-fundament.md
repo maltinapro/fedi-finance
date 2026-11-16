@@ -15,8 +15,8 @@ Repository-Struktur, Entwicklungsumgebung, CI und Konventionen, damit alle folge
 ## Issues
 - [ ] **E00-01 Monorepo-Skelett** – Verzeichnisse, `.gitignore`, `.editorconfig`, Lizenz-/Header-Konvention. AK: Struktur wie in architecture.md.
 - [ ] **E00-02 Rust-Workspace** – Cargo-Workspace mit `rustfmt`, `clippy` (deny warnings), `cargo-deny` (Lizenzprüfung, nur OSS). AK: `cargo fmt --check`, `cargo clippy`, `cargo test` laufen.
-- [ ] **E00-03 TypeScript/Node-Workspace** – Node-LTS, Paketmanager (pnpm), ESLint, Prettier, Vitest. AK: `pnpm lint` und `pnpm test` laufen.
-- [ ] **E00-04 Dev-Umgebung** – `docker compose` (oder kind/k3d) mit Postgres, Keycloak, MinIO/PDFCraft-Platzhalter. AK: `make dev` startet alles.
+- [ ] **E00-03 TypeScript/Node-Workspace** – Node-LTS und dieselben Werkzeuge wie PDFCraft (npm, Vite, Vitest, oxlint, TypeScript), damit übernommener PDFCraft-Code ohne Anpassung läuft; Formatierung mit Prettier. AK: `npm run lint` und `npm test` laufen.
+- [ ] **E00-04 Dev-Umgebung** – `docker compose` (oder kind/k3d) mit Postgres, Keycloak, MinIO und PDFCraft (`ghcr.io/maltinapro/pdfcraft-backend`, gepinnte Version) + Valkey; ein Init-Schritt legt das PDFCraft-Token an (`pdfcraft-backend tokens create`). AK: `make dev` startet alles; `curl` gegen PDFCraft `/health` und `POST /v1/invoices` funktioniert.
 - [ ] **E00-05 CI-Pipeline (GitHub Actions)** – Build, Lint, Test für Rust/TS, Helm-Lint, Dependency-/Lizenzscan, Secret-Scan. AK: PR-Checks laufen.
 - [ ] **E00-06 Commit-/PR-Konventionen** – PR-Template, Conventional-Commit-Check für PR-Titel, CODEOWNERS, Dependabot/Renovate. AK: Template vorhanden, Check aktiv.
 - [ ] **E00-07 Lizenz- und Namensentscheidung** – Projektlizenz prüfen, Namens-/Domain-Entscheidung (Vokabular-Domain). AK: Eintrag in decisions.md.

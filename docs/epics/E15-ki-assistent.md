@@ -12,7 +12,7 @@ Chat-Assistent im Frontend, der Fragen zu Buchhaltung und Kundendaten beantworte
 - Benutzer stellt Fragen im Chat, erhält Antworten mit Quellenlinks; Assistent führt auf Wunsch Navigationen/Entwürfe aus (mit Bestätigung).
 
 ## Issues
-- [ ] **E15-01 Chat-UI** – Streaming, Verlauf, Quellenkarten, Feedback (👍/👎), Kontext-Sidebar. AK: Barrierefrei, Tests.
+- [ ] **E15-01 Chat-UI** – Streaming, Verlauf, Quellenkarten, Feedback (Daumen hoch/runter), Kontext-Sidebar; Side Sheet (≥ 840 px) bzw. Vollbild-Dialog (kompakt) nach [design.md](../design.md). AK: Barrierefrei, Tests.
 - [ ] **E15-02 Tools für Datenabfragen** – Lese-Tools: Rechnungen suchen, Salden, offene Posten, Partner, Dokumente (mit Benutzerrechten). AK: Tool-Schemas + Tests.
 - [ ] **E15-03 Bedienungshilfe** – Hilfe-Wissen (Docs), kontextbezogene Antworten („Wie storniere ich…?"), Deep-Links in die UI. AK: Evaluationsfälle.
 - [ ] **E15-04 Aktionen mit Bestätigung** – Entwürfe (z. B. Rechnung, Kontierung) erzeugen; nie direkte Festschreibung; Vorschau + Freigabe. AK: Audit-Log.

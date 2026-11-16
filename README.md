@@ -8,7 +8,9 @@ Server tauschen Stammdaten und Belege (z. B. Rechnungen) über **ActivityPub** a
 ## Kernideen
 
 - **Föderation**: Geschäftspartner werden über ihre Domain (z. B. `f1.com`) gefunden und verknüpft.
-- **GoBD & DSGVO**: revisionssichere Buchführung, PDF-Archivierung (PDFs via [PDFCraft](https://github.com/maltinapro/pdfcraft)), Datensparsamkeit.
+- **GoBD & DSGVO**: revisionssichere Buchführung, Datensparsamkeit; PDFs und E-Rechnungen (ZUGFeRD/XRechnung) erzeugt
+  [PDFCraft](https://github.com/maltinapro/pdfcraft) per REST, FediFinance speichert und archiviert sie.
+- **Gestaltung**: Material Design 3 mit dem Design-System und Belegeditor von PDFCraft.
 - **Mandantenfähig**: pro Kunde ein Kubernetes-Namespace (Helm-Release) mit eigener DB, Storage und KI.
 - **KI-Assistent**: eigenes Datensilo pro Kunde, beantwortet Fragen zu Buchhaltung und Bedienung.
 - **Offen**: nur Open-Source-Infrastruktur (Rust, TypeScript, PostgreSQL, Keycloak, Helm, Velero, vLLM).
