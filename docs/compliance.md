@@ -49,7 +49,7 @@ Periodenabschluss, Jahresabschluss, Anlagenbuchhaltung. Der Funktionsumfang wird
 - Archivierung im Originalformat (das strukturierte XML ist das maßgebliche Dokument); FediFinance legt PDF und XML
   getrennt mit Hash ab. Ein festgeschriebener Beleg wird nie neu gerendert – Designänderungen betreffen nur neue Belege.
 - Pflichtangaben auf Rechnungen (§ 14 UStG) und Geschäftsbriefen (§ 37a HGB, § 35a GmbHG) kommen aus den Stammdaten
-  (E04-01) – von der Steuerberatung prüfen lassen.
+  (E04-01) – von der Steuerberatung prüfen lassen ([#45](https://github.com/maltinapro/fedi-finance/issues/45)).
 - Der Transport über ActivityPub ist ein zusätzlicher Übertragungsweg; Fremdsysteme werden z. B. per E-Mail/Download bedient.
 
 ## DSGVO
