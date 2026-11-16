@@ -45,9 +45,10 @@
 8. **Projektlizenz** (siehe `LICENSE`) vs. Geschäftsmodell Hosting. (E00)
 9. **Domain des JSON-LD-Vokabulars** (z. B. `fedifinance.org`). (E05)
 10. **Zielmärkte** außer Deutschland (Österreich/Schweiz) – beeinflusst Kontenrahmen und Steuerlogik. (E09)
-11. **Pflichtangaben auf Geschäftsbriefen** (§ 37a HGB, § 35a GmbHG) und Rechnungen (§ 14 UStG): Umsetzung über strukturierten Fuß (PDFCraft R10) – von Steuer-/Rechtsberatung prüfen lassen. (E04, E07)
+11. **Pflichtangaben auf Geschäftsbriefen** (§ 37a HGB, § 35a GmbHG) und Rechnungen (§ 14 UStG): Umsetzung über strukturierten Fuß (PDFCraft R10) – von Steuer-/Rechtsberatung prüfen lassen, Prüfliste in [#45](https://github.com/maltinapro/fedi-finance/issues/45). (E04, E07)
 
 ## Änderungsprotokoll
 
 - Erstfassung der Planung.
 - 11/2026: PDFCraft geprüft (Stand `00c5e04`): Anbindung per REST, Material Design 3 und Design-System aus PDFCraft übernommen, Frontend-Strategie festgelegt; E03, E07 überarbeitet, E04/E06/E12 ergänzt.
+- 11/2026: Phase-0-Issues mit den Epics abgeglichen, E03-10 als #44 angelegt, Anforderungen R1–R11 als maltinapro/pdfcraft#214–#224, Rechtsprüfung als #45.

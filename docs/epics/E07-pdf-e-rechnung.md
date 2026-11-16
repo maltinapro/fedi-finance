@@ -34,7 +34,7 @@ PDFCraft bearbeitet (vier Zonen, Live-Vorschau), mit einem der PDF-Designs *Clas
 - [ ] **E07-11 Deterministische Erzeugung** – Gleicher Snapshot + gleiche PDFCraft-Version = identische Bytes (Dokumentdatum aus Belegdatum, keine Zeitstempel); Ergebnis upstream absichern (R4). AK: Test in CI.
 - [ ] **E07-12 Versand** – Download, E-Mail (SMTP), Föderation (E05-08); optional später Briefversand mit Internetmarke über PDFCraft `/v1/postage`, sobald dort gegen die Live-API verifiziert. AK: Versandprotokoll.
 - [ ] **E07-13 Massenerzeugung & Last** – Bulk-Endpunkte (ZIP) über Hintergrundjobs (E01-08), `bulkMax` aus `GET /v1/token`, Rate-Limit beachten. AK: Lasttest (z. B. 1.000 Rechnungen) ohne Fehler.
-- [ ] **E07-14 Anforderungen an PDFCraft** – Issues R1–R11 aus [pdfcraft.md](../pdfcraft.md#7-anforderungen-an-pdfcraft-upstream) im PDFCraft-Repo anlegen, Status dort pflegen. AK: Issues verlinkt.
+- [x] **E07-14 Anforderungen an PDFCraft** – Issues R1–R11 aus [pdfcraft.md](../pdfcraft.md#7-anforderungen-an-pdfcraft-upstream) im PDFCraft-Repo anlegen, Status dort pflegen. AK: Issues verlinkt. Erledigt: maltinapro/pdfcraft#214–#224.
 
 ## Offene Fragen
 Deployment-Variante und Editor-Strategie (pdfcraft.md Abschnitt 8), Berichte (R6).
