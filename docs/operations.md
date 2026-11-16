@@ -3,15 +3,17 @@
 ## Deployment
 
 - Zielplattform: Kubernetes. Bereitstellung mit Helm.
-- Chart `fedifinance` (Backend, Frontend, PDFCraft, AI-Gateway, DB-Cluster-CR, PVCs, Ingress, NetworkPolicy, ServiceAccount, Secret-Referenzen).
+- Chart `fedifinance` (Backend, Frontend, AI-Gateway, DB-Cluster-CR, PVCs, Ingress, NetworkPolicy, ServiceAccount, Secret-Referenzen;
+  PDFCraft optional im Namespace mit `pdfcraft.enabled`, sonst geteilter Dienst über `pdfcraft.url`, siehe [pdfcraft.md](pdfcraft.md#4-betrieb)).
 - Neuer Kunde = neuer Helm-Release im Namespace `tenant-<id>`: `helm install tenant-<id> deploy/helm/fedifinance -n tenant-<id> -f values-<id>.yaml`.
   Ein Provisioning-Skript/Operator legt Namespace, Quota, Keycloak-Realm, Domain/Zertifikat und Release an.
-- Cluster-Basis (einmalig): Ingress-Controller, cert-manager, CloudNativePG-Operator, Keycloak, Velero, Monitoring (Prometheus/Grafana/Loki), später GPU Operator.
+- Cluster-Basis (einmalig): Ingress-Controller, cert-manager, CloudNativePG-Operator, Keycloak, Velero, Monitoring (Prometheus/Grafana/Loki),
+  PDFCraft + Valkey (geteilt, ohne Ingress; Image `ghcr.io/maltinapro/pdfcraft-backend`, Version gepinnt), später GPU Operator.
 - Alle Komponenten Open Source.
 
 ## Mandanten-Lebenszyklus
 
-1. Anlegen: Namespace, Quotas, Keycloak-Realm, DB, Storage, Helm-Release, DNS/Zertifikat, Initial-Admin.
+1. Anlegen: Namespace, Quotas, Keycloak-Realm, DB, Storage, PDFCraft-Token (Secret), Helm-Release, DNS/Zertifikat, Initial-Admin.
 2. Betrieb: Upgrades per `helm upgrade` (DB-Migrationen als Job), gestaffelte Rollouts.
 3. Export: Archiv mit allen Daten (siehe unten).
 4. Offboarding: Export bereitstellen, Aufbewahrungsfristen beachten, dann Namespace + Volumes + Backups gemäß Konzept löschen.

@@ -10,7 +10,8 @@
 | Dateispeicher | Dateisystem (PVC) für PDFs |
 | Identity | Keycloak (OIDC, SSO, externe IdPs) |
 | Föderation | ActivityPub |
-| PDF | PDFCraft |
+| PDF | PDFCraft als zustandslose Render-Engine über REST (`/v1`); FediFinance speichert alle Daten und PDFs ([pdfcraft.md](pdfcraft.md)) |
+| Gestaltung | Material Design 3 mit dem Design-System von PDFCraft (Tokens, Komponenten, Icons, Papier-Editor), Farbschema unverändert ([design.md](design.md)) |
 | Deployment | Kubernetes + Helm, ein Namespace/Release je Kunde |
 | Backup | Velero + Datenexport |
 | Lizenzen | Nur Open-Source-Infrastruktur |
@@ -21,7 +22,10 @@
 | Thema | Vorschlag | Epic |
 | --- | --- | --- |
 | Rust-Webframework | Axum + Tokio, SQLx, utoipa (OpenAPI) | E01 |
-| Frontend-Framework | React + Vite + TanStack Query | E03 |
+| Frontend-Framework | React 19 + Vite + TypeScript wie PDFCraft, keine UI-Bibliothek, Router mit Pfaden, TanStack Query | E03 |
+| Frontend-Werkzeuge | npm, Vitest, oxlint wie PDFCraft | E00 |
+| Frontend-Strategie | Design-Fundament aus PDFCraft kopieren (gepinnter Commit, Drift-Check), Shell/Seiten neu; Editor als gemeinsames Paket aus PDFCraft, bis dahin Portierung ([pdfcraft.md](pdfcraft.md#6-frontend-strategie)) | E03, E07 |
+| PDFCraft-Deployment | Geteilter Dienst im Cluster (Token je Mandant), optional je Mandant | E07, E12 |
 | Postgres-Betrieb | CloudNativePG | E12 |
 | KI-Basismodell | Qwen3 (Apache 2.0), Embeddings BGE-M3 | E14 |
 | LLM-Serving | llama.cpp (CPU) → vLLM (GPU) | E14, E19 |
@@ -31,7 +35,7 @@
 
 ## Offene Fragen
 
-1. **PDFCraft-Schnittstelle**: Wie wird PDFCraft angebunden (HTTP-Service, CLI, Bibliothek)? Unterstützt es PDF/A-3 und ZUGFeRD-Einbettung? (E07) – Das PDFCraft-Repository wurde bei der Planung nicht geprüft.
+1. ~~**PDFCraft-Schnittstelle**~~ – geklärt (11/2026): REST-API `/v1` (OpenAPI 3.1), PDF/A-3b mit eingebettetem EN-16931-/XRechnung-XML, Token-Auth, zustandslos. Offen bleiben Deployment-Variante, Editor-Paket und die Anforderungen R1–R11 ([pdfcraft.md](pdfcraft.md)). (E07)
 2. **ActivityPub in Rust**: vorhandene Bibliothek (z. B. `activitypub_federation`) oder Eigenbau? (E05)
 3. **Bankanbindung** mit Open-Source-Mitteln: FinTS/HBCI vs. PSD2-Aggregator; kommerzielle Aggregatoren wären kein OSS. (E10)
 4. **ELSTER/UStVA**: Die offizielle ERiC-Bibliothek ist nicht quelloffen – Umgang (Export-XML + manuelle Übermittlung vs. ERiC-Integration). (E09)
@@ -41,7 +45,9 @@
 8. **Projektlizenz** (siehe `LICENSE`) vs. Geschäftsmodell Hosting. (E00)
 9. **Domain des JSON-LD-Vokabulars** (z. B. `fedifinance.org`). (E05)
 10. **Zielmärkte** außer Deutschland (Österreich/Schweiz) – beeinflusst Kontenrahmen und Steuerlogik. (E09)
+11. **Pflichtangaben auf Geschäftsbriefen** (§ 37a HGB, § 35a GmbHG) und Rechnungen (§ 14 UStG): Umsetzung über strukturierten Fuß (PDFCraft R10) – von Steuer-/Rechtsberatung prüfen lassen. (E04, E07)
 
 ## Änderungsprotokoll
 
 - Erstfassung der Planung.
+- 11/2026: PDFCraft geprüft (Stand `00c5e04`): Anbindung per REST, Material Design 3 und Design-System aus PDFCraft übernommen, Frontend-Strategie festgelegt; E03, E07 überarbeitet, E04/E06/E12 ergänzt.

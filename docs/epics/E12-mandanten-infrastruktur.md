@@ -23,3 +23,4 @@ Pro Kunde ein eigener Namespace mit komplettem Stack, automatisch per Helm-Relea
 - [ ] **E12-09 Secrets-Management** – Sealed Secrets/SOPS oder External Secrets mit OpenBao/Vault-Alternative (OSS). AK: Keine Klartext-Secrets im Repo.
 - [ ] **E12-10 Mandanten-Offboarding** – Export, Löschung Namespace/Volumes/Backups nach Konzept. AK: Runbook + Test.
 - [ ] **E12-11 Ressourcenplanung & Kosten** – Standardprofile (S/M/L), Autoscaling, Mindestanforderungen. AK: Dokument.
+- [ ] **E12-12 PDFCraft-Betrieb** – PDFCraft-Backend + Valkey geteilt (Namespace `pdfcraft`) oder je Mandant (`pdfcraft.enabled` / `pdfcraft.url` im Chart, [pdfcraft.md](../pdfcraft.md#4-betrieb)); Token je Mandant als Secret mit Rotation; kein Ingress, NetworkPolicy nur vom FediFinance-Backend; `/metrics` und PDFCraft-Grafana-Dashboards. AK: beide Varianten per `helm template` getestet; Upgrade der gepinnten Version nur mit grünem Contract-Test (E07-02).

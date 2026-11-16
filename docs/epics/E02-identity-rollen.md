@@ -21,7 +21,7 @@ Sichere Anmeldung über Keycloak (OIDC) mit SSO-Anbindung verschiedener Anbieter
 - [ ] **E02-06 SSO-/IdP-Anbindung** – Identity Brokering, Mapping von Gruppen/Rollen, Anleitung. AK: Mindestens ein externer IdP getestet.
 - [ ] **E02-07 MFA & Passwort-Richtlinien** – TOTP/WebAuthn, Brute-Force-Schutz, Session-Timeouts. AK: Konfiguration dokumentiert.
 - [ ] **E02-08 Benutzerverwaltung** – Benutzer einladen, Rollen zuweisen, deaktivieren (UI + API über Keycloak Admin API). AK: Audit-Log-Einträge.
-- [ ] **E02-09 Service-zu-Service-Auth** – Backend ↔ AI-Gateway ↔ PDFCraft (mTLS oder signierte Tokens). AK: Konzept + Implementierung.
+- [ ] **E02-09 Service-zu-Service-Auth** – Backend ↔ AI-Gateway (mTLS oder signierte Tokens); Backend → PDFCraft per Bearer-Token je Mandant aus Secret ([pdfcraft.md](../pdfcraft.md#4-betrieb)). AK: Konzept + Implementierung.
 
 ## Offene Fragen
 Siehe decisions.md Nr. 6.
