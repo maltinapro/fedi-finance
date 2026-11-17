@@ -46,7 +46,7 @@ Status: **foundation done (E00)** – repository skeleton, CI and dev environmen
 
 Code layout: `backend/` (Cargo workspace, crates in `backend/crates/`), `frontend/` (TypeScript/React/Vite; later `frontend/src/design/` = design system copied from PDFCraft, source commit in `UPSTREAM.md`),
 `deploy/helm/fedifinance/` (Helm chart), `deploy/dev/` (docker compose dev stack, scripts, sample payload), `ai/` (AI gateway, evaluation; placeholder).
-CI: `.github/workflows/ci.yml` (Rust, cargo-deny, frontend, Helm, dev-compose validation, gitleaks, Markdown link check) and `pr-title.yml` (Conventional Commits). Dependabot keeps cargo, npm, actions and compose images current; `CODEOWNERS` and the PR template live in `.github/`.
+CI: `.github/workflows/ci.yml` (Rust, cargo-deny, frontend, Helm, dev-compose validation, gitleaks, Markdown link check) and `pr-title.yml` (Conventional Commits). Renovate (`renovate.json` in the repository root, same setup as PDFCraft; needs the Renovate GitHub App installed on the repository) keeps cargo, npm, actions and compose images current; `CODEOWNERS` and the PR template live in `.github/`.
 
 ## Working with epics
 
