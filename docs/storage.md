@@ -60,10 +60,10 @@ Quotas je Mandant: `ResourceQuota` für PVCs (E12-05) und RGW-User-/Bucket-Quota
   `BypassGovernanceRetention`, keine Änderung der Bucket-/Object-Lock-Konfiguration. Zugangsdaten als Kubernetes-Secret.
 - **Ablauf bei Freigabe:** Beleg rendern → Objekte mit Retention ablegen → DB-Transaktion (Belegnummer, Metadaten) committen.
   Scheitert das Ablegen, wird zurückgerollt (keine Lücke). Scheitert der DB-Commit nach dem Ablegen, bleibt ein gesperrtes,
-  aber unschädliches Waisenobjekt (hash-adressiert, wird bei erneuter Freigabe wiederverwendet); ein Job meldet Waisen im Audit-Log.
-- **Löschen:** Nach Fristende wird nicht automatisch gelöscht, sondern ein Löschvorschlag mit Freigabe erzeugt (E08-07);
+  aber unschädliches Waisenobjekt (hash-adressiert, wird bei erneuter Freigabe wiederverwendet); ein Job meldet Waisen.
+- **Löschen:** Nach Fristende wird nicht automatisch gelöscht, sondern ein Löschvorschlag mit Freigabe erzeugt (E08-06, E11-03);
   erst danach darf der Lifecycle die Objektversionen entfernen.
-- **Integrität:** periodischer Hash-Abgleich Objekt ↔ DB (E08-04), Hash-Kette im Audit-Log (E08-05).
+- **Integrität:** periodischer Hash-Abgleich Objekt ↔ DB (E08-04), Hash-Kette (E08-05).
 - **Fallback PVC:** Hash-adressierte Dateien auf RBD/CephFS, Write-once nur in der Anwendung (kein Code-Pfad zum Ändern/Löschen).
   Das ist die schwächere Maßnahme (Admins können Dateien ändern); sie ist in der Verfahrensdokumentation (E08-08) so zu
   beschreiben und nur für Dev/Test oder Mandanten ohne RGW zu verwenden. Das Backend nutzt eine Storage-Abstraktion mit beiden Backends (E08-01).
@@ -99,7 +99,7 @@ Quotas je Mandant: `ResourceQuota` für PVCs (E12-05) und RGW-User-/Bucket-Quota
 | Epic | Inhalt |
 | --- | --- |
 | E08-01 | Storage-Abstraktion mit S3-Object-Lock-Backend und PVC-Fallback |
-| E08-04 / E08-05 / E08-07 | Hash-Abgleich, Hash-Kette, Löschvorschlag nach Fristende |
+| E08-04 / E08-05 / E08-06 | Hash-Abgleich, Hash-Kette, Fristen und Löschsperre |
 | E11-03 | Lösch-/Sperrkonzept mit nicht umkehrbarer Retention |
 | E12-01 / E12-04 | Rook-Ceph in der Cluster-Basis, StorageClasses, Quotas, Verschlüsselung |
 | E12-07 / E12-10 | Provisioning von Bucket, RGW-User und Secret; Offboarding mit bestehen bleibenden Archiv-Buckets |
