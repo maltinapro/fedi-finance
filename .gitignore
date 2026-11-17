@@ -1,0 +1,17 @@
+# Rust
+backend/target/
+
+# Node
+node_modules/
+frontend/dist/
+
+# Local environment / secrets (never commit)
+.env
+.env.*
+!.env.example
+deploy/dev/.secrets/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store

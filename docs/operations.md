@@ -26,7 +26,7 @@
 | Datenbank | CloudNativePG Backup (Barman, WAL-Archivierung, PITR) | PostgreSQL |
 | Reine Daten | Logischer Export (Datenarchiv, unabhängig von Kubernetes) | Portable Sicherung |
 
-- Ziel: S3-kompatibler Objektspeicher (z. B. MinIO oder Garage), verschlüsselt, in der EU, getrennt vom Cluster.
+- Ziel: S3-kompatibler Objektspeicher (z. B. Garage oder SeaweedFS; MinIO scheidet aus, siehe decisions.md), verschlüsselt, in der EU, getrennt vom Cluster.
 - Regelmäßige automatisierte **Restore-Tests**; RPO/RTO werden definiert.
 - Backups beachten Aufbewahrungs- und Löschkonzept (DSGVO).
 

@@ -23,7 +23,7 @@ Key characteristics:
 Tech stack: Rust (backend), TypeScript/React + Vite (frontend, same stack as PDFCraft), Node.js (tooling, optional AI gateway), PostgreSQL, Keycloak,
 filesystem/PVC storage, Helm/Kubernetes, vLLM (later on NVIDIA Ampere GPUs).
 
-Status: **planning phase** – no application code yet. The concept lives in `docs/`, the work breakdown in `docs/epics/`.
+Status: **foundation done (E00)** – repository skeleton, CI and dev environment exist; no application logic yet. The concept lives in `docs/`, the work breakdown in `docs/epics/`.
 
 ## Where to find what
 
@@ -43,8 +43,9 @@ Status: **planning phase** – no application code yet. The concept lives in `do
 | `docs/epics/` | One file per epic with its issues/tasks |
 | `assets/logo.svg` | Project logo |
 
-Planned code layout (create when the first epic needs it): `backend/` (Cargo workspace), `frontend/` (TypeScript; `frontend/src/design/` = design system copied from PDFCraft, source commit in `UPSTREAM.md`),
-`deploy/helm/` (Helm charts), `ai/` (AI gateway, evaluation).
+Code layout: `backend/` (Cargo workspace, crates in `backend/crates/`), `frontend/` (TypeScript/React/Vite; later `frontend/src/design/` = design system copied from PDFCraft, source commit in `UPSTREAM.md`),
+`deploy/helm/fedifinance/` (Helm chart), `deploy/dev/` (docker compose dev stack, scripts, sample payload), `ai/` (AI gateway, evaluation; placeholder).
+CI: `.github/workflows/ci.yml` (Rust, cargo-deny, frontend, Helm, dev-compose validation, gitleaks, Markdown link check) and `pr-title.yml` (Conventional Commits). Dependabot keeps cargo, npm, actions and compose images current; `CODEOWNERS` and the PR template live in `.github/`.
 
 ## Working with epics
 
@@ -62,6 +63,7 @@ Planned code layout (create when the first epic needs it): `backend/` (Cargo wor
 - Keep `README.md` (short overview) and `docs/` (details) up to date: whenever a change affects setup, architecture, project structure, features, API, configuration or the tech stack, update the affected file in the same PR. Keep the README short; put details in `docs/`.
 - Work in one PR per roadmap step, branched from the latest `main`, so each step can be tested locally.
 - PR titles must follow Conventional Commits (e.g. `feat: ...`), because PRs are squash-merged and the title becomes the commit message.
+- No per-file license headers: the license is `LICENSE` (MIT, provisional, see `docs/decisions.md` #8) and manifests carry `license = "MIT"`.
 - Use open source components only (OSI-approved licenses) for infrastructure and dependencies; check licenses before adding a dependency.
 - Never commit secrets. Collect only data that is required (GDPR data minimisation).
 - Booked data is never modified in place (GoBD immutability): corrections are done via reversal entries.
@@ -71,7 +73,20 @@ Planned code layout (create when the first epic needs it): `backend/` (Cargo wor
 
 ## Build / test commands
 
-None yet. Add the verified commands here as soon as the first code exists (e.g. `cargo test`, `npm test`, `helm lint`).
+Run from the repository root; `make help` lists all targets. `make check` runs what CI runs (except cargo-deny, gitleaks, link check).
+
+| Command | What it does |
+| --- | --- |
+| `make dev` | `docker compose` stack in `deploy/dev/` (Postgres+pgvector, Keycloak, S3 via SeaweedFS, Valkey, PDFCraft pinned `0.31.0`); creates a PDFCraft token in `deploy/dev/.secrets/pdfcraft-token` (git-ignored) |
+| `make dev-check` | `curl` PDFCraft `/health` and `POST /v1/invoices` (expects a PDF) |
+| `make dev-down` / `make dev-reset` | stop the stack / stop and delete volumes and token |
+| `make lint` | `cargo fmt --check`, `cargo clippy -- -D warnings`, `npm run lint` (oxlint + Prettier), `helm lint` |
+| `make test` | `cargo test`, `npm test` (Vitest) |
+| `make build` | `cargo build`, `npm run build` (tsc + Vite) |
+| `make fmt` | `cargo fmt`, `npm run format` |
+| `cd backend && cargo deny check` | advisories, licenses (OSS only), sources; needs `cargo install cargo-deny` |
+
+Dev ports (all bound to 127.0.0.1): Postgres 5432, Keycloak 8081, S3 9000, PDFCraft 3000; override via `deploy/dev/.env` (see `.env.example`). Credentials there are local-only defaults.
 
 ## Roadmap / TODOs (resume here)
 
@@ -81,5 +96,5 @@ Full list with status: `docs/roadmap.md`. Next steps:
 - [x] Phase-0 GitHub issues synced with the epic files (#5, #6, #31, #32, #33, #34, #37–#40); E03-10 created as #44.
 - [x] PDFCraft upstream requests R1–R11 created (maltinapro/pdfcraft#214–#224); keep their status in `docs/pdfcraft.md` §7.
 - [ ] Legal review of mandatory details on invoices/business letters by a tax/legal advisor (#45) before the first real customer.
-- [ ] Start with `E00` (repository foundation: monorepo skeleton, CI, dev environment).
+- [x] `E00` (repository foundation: monorepo skeleton, CI, dev environment) done. Open: maintainer decision on project license (#8) and vocabulary domain (#9) in `docs/decisions.md`.
 - [ ] Then `E01` (Rust backend skeleton) and `E02` (auth with Keycloak).

@@ -23,14 +23,14 @@
 | --- | --- | --- |
 | Rust-Webframework | Axum + Tokio, SQLx, utoipa (OpenAPI) | E01 |
 | Frontend-Framework | React 19 + Vite + TypeScript wie PDFCraft, keine UI-Bibliothek, Router mit Pfaden, TanStack Query | E03 |
-| Frontend-Werkzeuge | npm, Vitest, oxlint wie PDFCraft | E00 |
+| Frontend-Werkzeuge | npm, Vitest, oxlint wie PDFCraft; Prettier für die Formatierung (umgesetzt in E00) | E00 |
 | Frontend-Strategie | Design-Fundament aus PDFCraft kopieren (gepinnter Commit, Drift-Check), Shell/Seiten neu; Editor als gemeinsames Paket aus PDFCraft, bis dahin Portierung ([pdfcraft.md](pdfcraft.md#6-frontend-strategie)) | E03, E07 |
 | PDFCraft-Deployment | Geteilter Dienst im Cluster (Token je Mandant), optional je Mandant | E07, E12 |
 | Postgres-Betrieb | CloudNativePG | E12 |
 | KI-Basismodell | Qwen3 (Apache 2.0), Embeddings BGE-M3 | E14 |
 | LLM-Serving | llama.cpp (CPU) → vLLM (GPU) | E14, E19 |
 | Vektorsuche | pgvector in Mandanten-DB | E14 |
-| Objektspeicher für Backups | MinIO oder Garage (Lizenz/Reife prüfen) | E13 |
+| Objektspeicher für Backups | Garage oder SeaweedFS (Lizenz/Reife prüfen); MinIO scheidet aus: AGPL und keine Community-Images mehr. In der Dev-Umgebung: SeaweedFS | E13 |
 | Keycloak-Topologie | Ein Keycloak, ein Realm je Mandant | E02 |
 
 ## Offene Fragen
@@ -42,8 +42,8 @@
 5. **AI-Gateway-Sprache**: Rust im Backend oder separater TypeScript/Node.js-Dienst? (E14)
 6. **Keycloak je Mandant oder geteilt**: Isolation vs. Betriebsaufwand. (E02, E12)
 7. **Zeitstempel/Revisionssicherheit**: Reicht Hash-Kette oder qualifizierter Zeitstempel (RFC 3161)? (E08)
-8. **Projektlizenz** (siehe `LICENSE`) vs. Geschäftsmodell Hosting. (E00)
-9. **Domain des JSON-LD-Vokabulars** (z. B. `fedifinance.org`). (E05)
+8. **Projektlizenz** (siehe `LICENSE`) vs. Geschäftsmodell Hosting. Stand: MIT, vorläufig. MIT erlaubt proprietäre gehostete Forks; AGPL-3.0 würde das verhindern, würde aber die Einbindung in Fremdsysteme erschweren. Entscheidung beim Maintainer vor dem ersten Release; bis dahin tragen alle Manifeste `license = "MIT"`, Quelldateien brauchen keinen Lizenzkopf (Lizenz gilt über `LICENSE`). (E00)
+9. **Domain des JSON-LD-Vokabulars** (z. B. `fedifinance.org`). Projektname bleibt „FediFinance“; die Domain muss vor E05 registriert bzw. festgelegt werden. (E00, E05)
 10. **Zielmärkte** außer Deutschland (Österreich/Schweiz) – beeinflusst Kontenrahmen und Steuerlogik. (E09)
 11. **Pflichtangaben auf Geschäftsbriefen** (§ 37a HGB, § 35a GmbHG) und Rechnungen (§ 14 UStG): Umsetzung über strukturierten Fuß (PDFCraft R10) – von Steuer-/Rechtsberatung prüfen lassen, Prüfliste in [#45](https://github.com/maltinapro/fedi-finance/issues/45). (E04, E07)
 
@@ -52,3 +52,4 @@
 - Erstfassung der Planung.
 - 11/2026: PDFCraft geprüft (Stand `00c5e04`): Anbindung per REST, Material Design 3 und Design-System aus PDFCraft übernommen, Frontend-Strategie festgelegt; E03, E07 überarbeitet, E04/E06/E12 ergänzt.
 - 11/2026: Phase-0-Issues mit den Epics abgeglichen, E03-10 als #44 angelegt, Anforderungen R1–R11 als maltinapro/pdfcraft#214–#224, Rechtsprüfung als #45.
+- 11/2026: E00 umgesetzt: Monorepo-Skelett, CI, Dev-Umgebung (`make dev`), Prettier ergänzt; SeaweedFS statt MinIO in der Dev-Umgebung; Lizenz-/Namensfragen dokumentiert.

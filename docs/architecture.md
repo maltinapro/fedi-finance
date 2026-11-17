@@ -56,13 +56,14 @@ Material-Design-3-Fundament und den Papier-Editor von PDFCraft. Details: [pdfcra
 - Audit-Log (unveränderlich, Hash-Kette) für alle buchungs- und sicherheitsrelevanten Aktionen.
 - Datenminimierung: nur notwendige Felder; Lösch-/Sperrkonzept siehe [compliance.md](compliance.md).
 
-## Geplante Repository-Struktur
+## Repository-Struktur
 
 ```
 backend/        Cargo workspace (api, domain, federation, archive, ...)
 frontend/       TypeScript-Frontend (src/design/ = aus PDFCraft übernommenes Design-System, siehe UPSTREAM.md)
 ai/             AI-Gateway, Evaluierung, Trainingspipeline
 deploy/helm/    Helm-Charts (fedifinance, Cluster-Basis)
+deploy/dev/     Dev-Umgebung (docker compose: Postgres, Keycloak, S3, Valkey, PDFCraft)
 docs/           Dokumentation und Epics
 assets/         Logo etc.
 ```

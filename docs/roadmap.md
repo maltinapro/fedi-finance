@@ -25,7 +25,7 @@ speichert Belege und PDFs und übernimmt Gestaltung und Editor. Details: [pdfcra
 
 | Epic | Titel | Phase | Abhängig von | Status |
 | --- | --- | --- | --- | --- |
-| [E00](epics/E00-projekt-fundament.md) | Projekt-Fundament | 0 | – | offen |
+| [E00](epics/E00-projekt-fundament.md) | Projekt-Fundament | 0 | – | fertig |
 | [E01](epics/E01-backend-grundgeruest.md) | Rust-Backend-Grundgerüst | 0 | E00 | offen |
 | [E02](epics/E02-identity-rollen.md) | Identity, Login, SSO, Rollen & Rechte | 0 | E01 | offen |
 | [E03](epics/E03-frontend.md) | Frontend-Grundgerüst (Material Design 3 aus PDFCraft) | 0 | E00, E02 | offen |

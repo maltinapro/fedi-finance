@@ -17,11 +17,27 @@ Server tauschen Stammdaten und Belege (z. B. Rechnungen) über **ActivityPub** a
 
 ## Status
 
-Planungsphase – es gibt noch keinen Anwendungscode. Konzept und Arbeitspakete:
+Das Projekt-Fundament (Epic E00) steht: Monorepo-Skelett, CI und Dev-Umgebung. Fachlicher Anwendungscode folgt mit E01 ff.
+Konzept und Arbeitspakete:
 
 - [Dokumentation](docs/README.md)
 - [Roadmap & Epics](docs/roadmap.md)
 - [AGENTS.md](AGENTS.md) – Hinweise für KI-Agenten / Mitwirkende
+
+## Entwicklung
+
+Voraussetzungen: Rust (stable), Node.js ≥ 24, Docker mit Compose, Helm, `make`.
+
+| Befehl | Zweck |
+| --- | --- |
+| `make dev` | Dev-Umgebung starten (Postgres, Keycloak, S3, Valkey, PDFCraft) und PDFCraft-Token anlegen |
+| `make dev-check` | Smoke-Test: PDFCraft `/health` und `POST /v1/invoices` |
+| `make dev-down` / `make dev-reset` | Dev-Umgebung stoppen / inkl. Daten löschen |
+| `make lint` · `make test` · `make build` | Prüfen, testen, bauen (Rust, TypeScript, Helm) |
+| `make check` | Alles wie in der CI |
+| `make fmt` | Code formatieren |
+
+Struktur: `backend/` (Rust), `frontend/` (TypeScript/React), `deploy/` (Helm, Dev-Umgebung), `ai/`, `docs/`.
 
 ## Lizenz
 
