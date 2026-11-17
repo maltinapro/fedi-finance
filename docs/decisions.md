@@ -31,7 +31,7 @@
 | LLM-Serving | llama.cpp (CPU) → vLLM (GPU) | E14, E19 |
 | Vektorsuche | pgvector in Mandanten-DB | E14 |
 | Objektspeicher für Backups | Garage oder SeaweedFS (Lizenz/Reife prüfen); MinIO scheidet aus: AGPL und keine Community-Images mehr. In der Dev-Umgebung: SeaweedFS | E13 |
-| Archiv-Storage | Hinter einer Storage-Abstraktion: S3-kompatibel mit Object Lock (z. B. Ceph RGW) bevorzugt, alternativ PVC (CephFS/RBD) mit Write-once in der Anwendung. PDFs nie in der DB ([compliance.md](compliance.md#technische-umsetzung-der-unveränderbarkeit-dokumentenarchiv)) | E08, E12 |
+| Archiv-Storage | Hinter einer Storage-Abstraktion: S3-kompatibel mit Object Lock bevorzugt, Vorschlag Rook-Ceph RGW (Frage 12), alternativ PVC (CephFS/RBD) mit Write-once in der Anwendung. PDFs nie in der DB ([compliance.md](compliance.md#technische-umsetzung-der-unveränderbarkeit-dokumentenarchiv)) | E08, E12 |
 | Keycloak-Topologie | Ein Keycloak, ein Realm je Mandant | E02 |
 
 ## Offene Fragen
@@ -48,7 +48,7 @@
 10. **Zielmärkte** außer Deutschland (Österreich/Schweiz) – beeinflusst Kontenrahmen und Steuerlogik. (E09)
 11. **Pflichtangaben auf Geschäftsbriefen** (§ 37a HGB, § 35a GmbHG) und Rechnungen (§ 14 UStG): Umsetzung über strukturierten Fuß (PDFCraft R10) – von Steuer-/Rechtsberatung prüfen lassen, Prüfliste in [#45](https://github.com/maltinapro/fedi-finance/issues/45). (E04, E07)
 
-12. **Archiv-Storage im Cluster**: Läuft der Cluster bereits auf Ceph (RGW aktiviert) oder wird Rook-Ceph neu aufgebaut? Davon hängt ab, ob Object Lock (RGW) oder nur PVC mit Anwendungs-WORM möglich ist. Rook-Ceph braucht mindestens 3 Nodes mit eigenen Platten; für kleine Cluster ist ein einfacherer S3-Speicher mit Object Lock zu prüfen. Zusätzlich klären: Umgang mit nicht umkehrbarer Retention (Compliance-Modus) bei Fehlablage und DSGVO-Löschwünschen. (E08, E11, E12)
+12. ~~**Archiv-Storage im Cluster**~~ – geklärt (11/2026): Der Betreiber kann beliebige Storage-Software im Cluster installieren, es gibt keine Vorgabe. Entscheidung: S3 mit Object Lock als Ziel-Backend; Vorschlag **Rook-Ceph mit RGW** (CephFS/RBD für PVCs, RGW für Archiv-Buckets), sofern mindestens 3 Nodes mit eigenen Platten vorhanden sind. Bei kleineren Clustern eine leichtere S3-Lösung mit Object-Lock-Unterstützung nehmen (z. B. SeaweedFS, Unterstützung vor Einführung prüfen; Garage unterstützt nach unserem Kenntnisstand kein Object Lock und eignet sich nur als Backup-Ziel) und das PVC-Backend als Rückfall behalten. Offen bleibt: Umgang mit nicht umkehrbarer Retention (Compliance-Modus) bei Fehlablage und DSGVO-Löschwünschen (E11-03) und die Knotenzahl des Zielclusters. (E08, E11, E12)
 
 ## Änderungsprotokoll
 
@@ -57,3 +57,4 @@
 - 11/2026: Phase-0-Issues mit den Epics abgeglichen, E03-10 als #44 angelegt, Anforderungen R1–R11 als maltinapro/pdfcraft#214–#224, Rechtsprüfung als #45.
 - 11/2026: E00 umgesetzt: Monorepo-Skelett, CI, Dev-Umgebung (`make dev`), Prettier ergänzt; SeaweedFS statt MinIO in der Dev-Umgebung; Lizenz-/Namensfragen dokumentiert.
 - 11/2026: Archiv-Storage geklärt (Konzept): GoBD verlangt kein bestimmtes Medium; Ceph (CephFS/RBD/RGW) ist geeignet, Unveränderbarkeit über Hash-Adressierung, Write-once und S3 Object Lock; keine PDFs in der DB. E08-01, E11-03, E12-04, compliance.md ergänzt; Rückfrage als Nr. 12.
+- 11/2026: Frage 12 geklärt: freie Wahl der Storage-Software im Cluster; Vorschlag Rook-Ceph (RGW + Object Lock), Alternativen nach Clustergröße.
