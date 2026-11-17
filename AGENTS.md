@@ -21,7 +21,7 @@ Key characteristics:
 - Only open source infrastructure software.
 
 Tech stack: Rust (backend), TypeScript/React + Vite (frontend, same stack as PDFCraft), Node.js (tooling, optional AI gateway), PostgreSQL, Keycloak,
-filesystem/PVC storage, Helm/Kubernetes, vLLM (later on NVIDIA Ampere GPUs).
+PVC or S3 (Object Lock) document storage, Helm/Kubernetes, vLLM (later on NVIDIA Ampere GPUs).
 
 Status: **foundation done (E00)** – repository skeleton, CI and dev environment exist; no application logic yet. The concept lives in `docs/`, the work breakdown in `docs/epics/`.
 

@@ -14,7 +14,7 @@ Datenschutzkonforme Speicherung: nur notwendige Daten, Rechte der Betroffenen, L
 ## Issues
 - [ ] **E11-01 Datenkatalog** – Jedes gespeicherte Feld: Zweck, Rechtsgrundlage, Frist, Sichtbarkeit. AK: Dokument + Review bei neuen Feldern (Checkliste in PR-Template).
 - [ ] **E11-02 Datenminimierung im Code** – Review aller Datenmodelle, optionale Felder, Pseudonymisierung wo möglich. AK: Review-Bericht.
-- [ ] **E11-03 Lösch- und Sperrkonzept** – Sperrung bei Aufbewahrungspflicht, Löschung nach Frist, Löschung in Backups/KI-Index. AK: Prozess + Tests.
+- [ ] **E11-03 Lösch- und Sperrkonzept** – Sperrung bei Aufbewahrungspflicht, Löschung nach Frist, Löschung in Backups/KI-Index. Berücksichtigt nicht umkehrbare S3-Object-Lock-Retention (Compliance-Modus, siehe [compliance.md](../compliance.md#technische-umsetzung-der-unveränderbarkeit-dokumentenarchiv)): Löschung erst nach Fristende, Sperrung statt Löschung. AK: Prozess + Tests.
 - [ ] **E11-04 Betroffenenrechte** – Auskunft/Export (Art. 15/20), Berichtigung, Einschränkung. AK: UI/API + Audit.
 - [ ] **E11-05 Verschlüsselung** – TLS intern/extern, Volume-/DB-Verschlüsselung, Feldverschlüsselung für sensible Daten (z. B. Bankzugang). AK: Nachweis in Doku.
 - [ ] **E11-06 Logging-Datenschutz** – Keine personenbezogenen Daten in Logs, Retention, Maskierung. AK: Log-Tests.

@@ -22,7 +22,7 @@
 
 | Ebene | Werkzeug | Inhalt |
 | --- | --- | --- |
-| Cluster/Namespace | **Velero** (Kopia, CSI-Snapshots) | Kubernetes-Objekte und PVCs (PDF-Archiv) |
+| Cluster/Namespace | **Velero** (Kopia, CSI-Snapshots) | Kubernetes-Objekte und PVCs (PDF-Archiv); S3-Archiv-Buckets mit Object Lock werden separat auf das Backup-Ziel repliziert |
 | Datenbank | CloudNativePG Backup (Barman, WAL-Archivierung, PITR) | PostgreSQL |
 | Reine Daten | Logischer Export (Datenarchiv, unabhängig von Kubernetes) | Portable Sicherung |
 

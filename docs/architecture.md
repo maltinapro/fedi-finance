@@ -25,7 +25,7 @@
 | Backend | Rust (Axum, SQLx, Tokio) | REST/JSON-API, Buchungslogik, Föderation, Archiv, Jobs |
 | Frontend | TypeScript, React 19 + Vite wie PDFCraft; Material Design 3 mit dem PDFCraft-Design-System ([design.md](design.md)) | Web-UI, Belegeditor, KI-Chat |
 | Datenbank | PostgreSQL (Betrieb via CloudNativePG) | Stammdaten, Buchungen, Audit-Log, Vektorindex (pgvector) |
-| Dokumentenspeicher | Dateisystem/PVC, hash-adressiert | Unveränderliche PDFs, Anhänge, Archiv |
+| Dokumentenspeicher | PVC (z. B. Ceph) oder S3 mit Object Lock (z. B. Ceph RGW), hash-adressiert; nie in der DB | Unveränderliche PDFs, Anhänge, Archiv |
 | PDF | [PDFCraft](pdfcraft.md) (Rust, REST `/v1`, zustandslos; Valkey nur für Token/Rate-Limit) | Rendert alle PDFs (6 Belegarten, 3 Designs, PDF/A-3b mit ZUGFeRD/XRechnung); speichert nichts – Ablage macht FediFinance |
 | Identity | Keycloak | Login, SSO (OIDC/SAML, externe IdPs), Rollen |
 | Föderation | ActivityPub im Backend | Austausch mit anderen FediFinance-Servern |
@@ -50,7 +50,7 @@ Material-Design-3-Fundament und den Papier-Editor von PDFCraft. Details: [pdfcra
 ## Datenhaltung
 
 - Strukturierte Daten in PostgreSQL. Gebuchte Datensätze sind append-only; Korrekturen via Storno-Buchung.
-- PDFs und Belege im Dateisystem, adressiert über SHA-256; Metadaten (Hash, Zeitstempel, Aufbewahrungsfrist) in der DB.
+- PDFs und Belege im Dokumentenspeicher (PVC oder S3 mit Object Lock), adressiert über SHA-256; Metadaten (Hash, Zeitstempel, Aufbewahrungsfrist) in der DB. Unveränderbarkeit: [compliance.md](compliance.md#technische-umsetzung-der-unveränderbarkeit-dokumentenarchiv).
 - Von PDFCraft erzeugte PDFs werden bei der Freigabe einmal gerendert und mit eingebettetem XML und Render-Snapshot
   abgelegt, danach nie neu erzeugt ([pdfcraft.md](pdfcraft.md#3-integrationsarchitektur)).
 - Audit-Log (unveränderlich, Hash-Kette) für alle buchungs- und sicherheitsrelevanten Aktionen.

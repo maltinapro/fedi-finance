@@ -3,7 +3,7 @@
 **Phase:** 1 · **Abhängig von:** E06, E07 · **Status:** offen
 
 ## Ziel
-Revisionssicheres Ablegen aller Belege/PDFs im Dateisystem mit Hashes, Zeitstempeln, Aufbewahrungsfristen, Sperrung und Archivierung nach Fristen; Prüfzugriff.
+Revisionssicheres Ablegen aller Belege/PDFs im Dokumentenspeicher (PVC oder S3 mit Object Lock, nie in der DB) mit Hashes, Zeitstempeln, Aufbewahrungsfristen, Sperrung und Archivierung nach Fristen; Prüfzugriff.
 
 ## Kontext / Links
 [compliance.md](../compliance.md), [architecture.md](../architecture.md)
@@ -12,10 +12,10 @@ Revisionssicheres Ablegen aller Belege/PDFs im Dateisystem mit Hashes, Zeitstemp
 - Jedes Dokument ist unveränderbar abgelegt, mit Beleg verknüpft, Hash wird periodisch geprüft; Fristen werden verwaltet; Betriebsprüfer-Export vorhanden.
 
 ## Issues
-- [ ] **E08-01 Dokumentenspeicher** – Hash-adressierte Ablage (SHA-256) auf PVC, Metadaten in DB, Write-once, Pfad-Sicherheit; zu jedem von PDFCraft erzeugten PDF auch das eingebettete XML und der Render-Snapshot (pdfcraft.md Abschnitt 3). AK: Überschreiben unmöglich.
+- [ ] **E08-01 Dokumentenspeicher** – Hash-adressierte Ablage (SHA-256) hinter einer Storage-Abstraktion mit zwei Backends: PVC (CephFS/RBD, Write-once in der Anwendung) und S3-kompatibel mit **Object Lock** im Compliance-Modus (z. B. Ceph RGW, Retention bis Fristende, bevorzugt); Metadaten in DB, keine Dokumente in der DB, Pfad-/Key-Sicherheit; zu jedem von PDFCraft erzeugten PDF auch das eingebettete XML und der Render-Snapshot (pdfcraft.md Abschnitt 3). AK: Überschreiben unmöglich (Test gegen beide Backends; mit Object Lock auch für Admin-Zugriff); Konzept in [compliance.md](../compliance.md#technische-umsetzung-der-unveränderbarkeit-dokumentenarchiv).
 - [ ] **E08-02 Upload & Belegerfassung** – Upload (PDF/Bild/XML), Virenscan (ClamAV), Typprüfung, Größenlimits, OCR-Hook (E14). AK: Scan-Test.
 - [ ] **E08-03 Beleg ↔ Buchung Verknüpfung** – Pflichtverknüpfung, „Beleg fehlt"-Auswertung. AK: Bericht.
-- [ ] **E08-04 Integritätsprüfung** – Periodischer Job prüft Hashes, Alarm bei Abweichung. AK: Manipulationstest.
+- [ ] **E08-04 Integritätsprüfung** – Periodischer Job prüft Hashes (Dateien/Objekte gegen DB-Metadaten), Alarm bei Abweichung. AK: Manipulationstest.
 - [ ] **E08-05 Zeitstempel** – Hash-Kette; optional RFC-3161-Zeitstempel. AK: Entscheidung (decisions.md Nr. 7) + Umsetzung.
 - [ ] **E08-06 Aufbewahrungsfristen** – Konfiguration je Dokumentart, Berechnung Fristende, Sperre gegen Löschung. AK: Tests mit Fristgrenzen.
 - [ ] **E08-07 Archivierung** – Nach Frist/Jahresabschluss: Verschieben in Archiv-Tier (komprimiert, schreibgeschützt), Löschvorschlag nach Fristablauf mit Freigabe. AK: Protokoll.

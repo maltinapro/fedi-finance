@@ -15,7 +15,7 @@ Pro Kunde ein eigener Namespace mit komplettem Stack, automatisch per Helm-Relea
 - [ ] **E12-01 Cluster-Basis** – Ingress, cert-manager, CloudNativePG-Operator, Keycloak, Monitoring; Installation per Helm/Helmfile. AK: Reproduzierbar auf k3d/kind.
 - [ ] **E12-02 Helm-Chart `fedifinance`** – Deployments, Services, Ingress, ConfigMaps, ServiceAccounts, Probes, Ressourcenlimits. AK: `helm lint`, `helm template` + kubeconform in CI.
 - [ ] **E12-03 Datenbank je Mandant** – CloudNativePG-Cluster, Migrations-Job (Hook), Zugangsdaten als Secret. AK: Upgrade-Test.
-- [ ] **E12-04 Storage** – PVC für Dokumentenarchiv, StorageClass-Anforderungen, Verschlüsselung, Quotas. AK: Dokumentiert.
+- [ ] **E12-04 Storage** – Dokumentenarchiv auf PVC (StorageClass-Anforderungen, z. B. Rook-Ceph CephFS/RBD: Replikation, Snapshots/CSI für Velero, Verschlüsselung, Quotas) oder auf einem S3-Bucket mit Object Lock (z. B. Ceph RGW; ein Bucket und Benutzer je Mandant, Object Lock beim Anlegen aktivieren, Zugangsdaten als Secret). Chart-Werte für beide Varianten. Hinweis: Rook-Ceph braucht mindestens 3 Nodes mit eigenen Platten und ersetzt kein Backup (E13). AK: Dokumentiert, Variante wählbar per Helm-Wert.
 - [ ] **E12-05 Netzwerk & Isolation** – NetworkPolicies (Default-Deny), PodSecurity (restricted), ResourceQuota/LimitRange. AK: Policy-Tests.
 - [ ] **E12-06 Domain & Zertifikate** – Kundendomain (Föderation!) und TLS per cert-manager, Wildcard-/Einzelzertifikate. AK: Automatisch.
 - [ ] **E12-07 Provisioning-Automatisierung** – Neuer Kunde: Namespace, Realm, Secrets, Helm-Release, DNS-Hinweise, Initial-Admin. AK: Ein Befehl/Job.
