@@ -12,8 +12,8 @@ Zuverlässige Backups (Velero + DB-Backups + reine Datensicherung) und ein einfa
 - Automatische Backups je Mandant, getestete Restores (Namespace + DB PITR), Kunden-Export per Klick.
 
 ## Issues
-- [ ] **E13-01 Backup-Ziel** – S3-kompatibler OSS-Speicher (Garage/SeaweedFS), Verschlüsselung, Zugriffskonzept. AK: ADR.
-- [ ] **E13-02 Velero-Setup** – Schedules je Mandanten-Namespace, CSI-Snapshots/Kopia, Retention. AK: Backup + Restore getestet.
+- [ ] **E13-01 Backup-Ziel** – S3-kompatibler OSS-Speicher außerhalb des Ceph-Clusters, mit Object Lock für das Archiv-Replikat (zweiter Ceph-Cluster oder SeaweedFS; Garage scheidet für das Archiv-Replikat aus), Verschlüsselung, Zugriffskonzept, Replikationsjob mit SHA-256-Prüfung ([storage.md](../storage.md#5-backup-ziel-und-replikation)). AK: ADR + Test.
+- [ ] **E13-02 Velero-Setup** – Schedules je Mandanten-Namespace, CSI-Snapshots (Ceph RBD)/Kopia, Retention. AK: Backup + Restore getestet.
 - [ ] **E13-03 Datenbank-Backup** – CloudNativePG Barman, WAL-Archivierung, PITR. AK: Restore auf Zeitpunkt getestet.
 - [ ] **E13-04 Logischer Datenexport** – Job erzeugt Archiv (JSON/CSV, PDFs, `manifest.json` mit SHA-256, `index.xml`). AK: Archiv vollständig und prüfbar.
 - [ ] **E13-05 Export im UI/API** – Anfordern, Fortschritt, Download (zeitlich begrenzter Link), Benachrichtigung. AK: Rollenrecht „Export".

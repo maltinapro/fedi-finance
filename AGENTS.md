@@ -35,6 +35,7 @@ Status: **foundation done (E00)** – repository skeleton, CI and dev environmen
 | `docs/federation.md` | ActivityPub design |
 | `docs/compliance.md` | GoBD, retention, GDPR, e-invoicing |
 | `docs/ai.md` | AI concept and model recommendation |
+| `docs/storage.md` | Storage: Rook-Ceph (min. 3 Nodes), Archiv mit S3 Object Lock, Backup-Ziel, Offboarding |
 | `docs/operations.md` | Kubernetes, Helm, backup, export |
 | `docs/pdfcraft.md` | PDFCraft features, REST integration, operation, frontend strategy, upstream requirements (R1–R11) |
 | `docs/design.md` | Design guide (Material Design 3, adopted from PDFCraft; only FediFinance additions/deviations) |

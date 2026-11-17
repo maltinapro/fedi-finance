@@ -26,12 +26,12 @@
 | Frontend-Werkzeuge | npm, Vitest, oxlint wie PDFCraft; Prettier für die Formatierung (umgesetzt in E00) | E00 |
 | Frontend-Strategie | Design-Fundament aus PDFCraft kopieren (gepinnter Commit, Drift-Check), Shell/Seiten neu; Editor als gemeinsames Paket aus PDFCraft, bis dahin Portierung ([pdfcraft.md](pdfcraft.md#6-frontend-strategie)) | E03, E07 |
 | PDFCraft-Deployment | Geteilter Dienst im Cluster (Token je Mandant), optional je Mandant | E07, E12 |
-| Postgres-Betrieb | CloudNativePG | E12 |
+| Postgres-Betrieb | CloudNativePG auf Ceph-RBD (`fedifinance-block`) | E12 |
 | KI-Basismodell | Qwen3 (Apache 2.0), Embeddings BGE-M3 | E14 |
 | LLM-Serving | llama.cpp (CPU) → vLLM (GPU) | E14, E19 |
 | Vektorsuche | pgvector in Mandanten-DB | E14 |
-| Objektspeicher für Backups | Garage oder SeaweedFS (Lizenz/Reife prüfen); MinIO scheidet aus: AGPL und keine Community-Images mehr. In der Dev-Umgebung: SeaweedFS | E13 |
-| Archiv-Storage | Hinter einer Storage-Abstraktion: S3-kompatibel mit Object Lock bevorzugt, Vorschlag Rook-Ceph RGW (Frage 12), alternativ PVC (CephFS/RBD) mit Write-once in der Anwendung. PDFs nie in der DB ([compliance.md](compliance.md#technische-umsetzung-der-unveränderbarkeit-dokumentenarchiv)) | E08, E12 |
+| Objektspeicher für Backups | Getrennt vom Ceph-Cluster, mit Object Lock für das Archiv-Replikat: zweiter Ceph-Cluster oder SeaweedFS (Object Lock getestet); Garage nur ohne Archiv-Replikat; MinIO scheidet aus (AGPL, keine Community-Images mehr). In der Dev-Umgebung: SeaweedFS | E13 |
+| Archiv-Storage | **Rook-Ceph (min. 3 Nodes, Replikation 3, RBD + RGW)**; Archiv als S3-Bucket je Mandant mit Object Lock (Compliance in Produktion, Governance in Dev/Test), Fallback PVC mit Write-once in der Anwendung; PDFs nie in der DB ([storage.md](storage.md)) | E08, E12 |
 | Keycloak-Topologie | Ein Keycloak, ein Realm je Mandant | E02 |
 
 ## Offene Fragen
@@ -47,8 +47,7 @@
 9. **Domain des JSON-LD-Vokabulars** (z. B. `fedifinance.org`). Projektname bleibt „FediFinance“; die Domain muss vor E05 registriert bzw. festgelegt werden. (E00, E05)
 10. **Zielmärkte** außer Deutschland (Österreich/Schweiz) – beeinflusst Kontenrahmen und Steuerlogik. (E09)
 11. **Pflichtangaben auf Geschäftsbriefen** (§ 37a HGB, § 35a GmbHG) und Rechnungen (§ 14 UStG): Umsetzung über strukturierten Fuß (PDFCraft R10) – von Steuer-/Rechtsberatung prüfen lassen, Prüfliste in [#45](https://github.com/maltinapro/fedi-finance/issues/45). (E04, E07)
-
-12. ~~**Archiv-Storage im Cluster**~~ – geklärt (11/2026): Der Betreiber kann beliebige Storage-Software im Cluster installieren, es gibt keine Vorgabe. Entscheidung: S3 mit Object Lock als Ziel-Backend; Vorschlag **Rook-Ceph mit RGW** (CephFS/RBD für PVCs, RGW für Archiv-Buckets), sofern mindestens 3 Nodes mit eigenen Platten vorhanden sind. Bei kleineren Clustern eine leichtere S3-Lösung mit Object-Lock-Unterstützung nehmen (z. B. SeaweedFS, Unterstützung vor Einführung prüfen; Garage unterstützt nach unserem Kenntnisstand kein Object Lock und eignet sich nur als Backup-Ziel) und das PVC-Backend als Rückfall behalten. Offen bleibt: Umgang mit nicht umkehrbarer Retention (Compliance-Modus) bei Fehlablage und DSGVO-Löschwünschen (E11-03) und die Knotenzahl des Zielclusters. (E08, E11, E12)
+12. ~~**Archiv-Storage im Cluster**~~ – geklärt (11/2026): Start mit mindestens 3 Nodes, Rook-Ceph mit RGW und S3 Object Lock, Details und Begründung in [storage.md](storage.md). Offen zur Prüfung durch die Steuer-/Rechtsberatung: Compliance-Modus mit nicht umkehrbarer Retention und Aufbewahrung statt Löschung (Art. 17 Abs. 3 lit. b DSGVO). (E08, E11, E12)
 
 ## Änderungsprotokoll
 
@@ -58,3 +57,4 @@
 - 11/2026: E00 umgesetzt: Monorepo-Skelett, CI, Dev-Umgebung (`make dev`), Prettier ergänzt; SeaweedFS statt MinIO in der Dev-Umgebung; Lizenz-/Namensfragen dokumentiert.
 - 11/2026: Archiv-Storage geklärt (Konzept): GoBD verlangt kein bestimmtes Medium; Ceph (CephFS/RBD/RGW) ist geeignet, Unveränderbarkeit über Hash-Adressierung, Write-once und S3 Object Lock; keine PDFs in der DB. E08-01, E11-03, E12-04, compliance.md ergänzt; Rückfrage als Nr. 12.
 - 11/2026: Frage 12 geklärt: freie Wahl der Storage-Software im Cluster; Vorschlag Rook-Ceph (RGW + Object Lock), Alternativen nach Clustergröße.
+- 11/2026: Start mit mindestens 3 Nodes festgelegt; Storage-Entscheidungen S1–S6 in [storage.md](storage.md) dokumentiert (Rook-Ceph, Object Lock, Backup-Ziel, Offboarding); Object Lock in SeaweedFS (Dev) geprüft.

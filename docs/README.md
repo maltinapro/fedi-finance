@@ -8,6 +8,7 @@
 | [pdfcraft.md](pdfcraft.md) | PDFCraft: Funktionsumfang, REST-Anbindung, Betrieb, Frontend-Strategie, Anforderungen |
 | [design.md](design.md) | Design-Leitfaden (Material Design 3, übernommen aus PDFCraft) |
 | [ai.md](ai.md) | KI-Konzept, Modellempfehlung, Training |
+| [storage.md](storage.md) | Rook-Ceph (3 Nodes), Dokumentenarchiv mit S3 Object Lock, Backup-Ziel |
 | [operations.md](operations.md) | Kubernetes, Helm, Backup, Export |
 | [decisions.md](decisions.md) | Getroffene Entscheidungen und offene Fragen |
 | [roadmap.md](roadmap.md) | Epics, Reihenfolge, Status |
