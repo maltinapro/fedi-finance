@@ -14,7 +14,7 @@ Cluster installieren; der Start erfolgt mit **mindestens drei Nodes**.
 | S2 | PDFs, XML und Render-Snapshots liegen **nie in der Datenbank**, sondern als Objekte im Archiv-Bucket; die DB hält nur Metadaten. |
 | S3 | Archiv = **S3-Bucket je Mandant mit Versioning und Object Lock**, hash-adressierte Keys. Fallback: PVC mit Write-once in der Anwendung (nur Dev/Test oder Mandanten ohne RGW). |
 | S4 | Object-Lock-Modus: **Compliance** in Produktion, **Governance** in Dev/Test; per Helm-Wert wählbar. Retention wird erst bei der Freigabe gesetzt und läuft bis Fristende. |
-| S5 | Das **Backup-Ziel liegt außerhalb des Ceph-Clusters** (anderer Standort/Fehlerbereich, EU) und muss für das Archiv-Replikat Object Lock unterstützen. Ceph ist kein Backup. |
+| S5 | **Offsite-Backup ist Pflicht:** Velero (`snapshotMoveData`), Barman und Archiv-Replikat schreiben in ein S3-Ziel mit Object Lock an einem anderen Standort (Referenz: SeaweedFS), EU, verschlüsselt. Ceph ist kein Backup. |
 | S6 | Buckets werden vom Provisioning angelegt und gehören nicht zum Helm-Release-Lebenszyklus (Offboarding löscht sie nicht vor Fristende). |
 
 ## 1. Cluster-Topologie (3 Nodes)
@@ -83,16 +83,16 @@ Quotas je Mandant: `ResourceQuota` für PVCs (E12-05) und RGW-User-/Bucket-Quota
   (Kosten, Zugriff für Betriebsprüfungen); Alternative: Kunde übernimmt das Archiv per Export und beendet die Aufbewahrung
   in eigener Verantwortung. Nach Fristende Bucket löschen.
 
-## 5. Backup-Ziel und Replikation
+## 5. Offsite-Backup und Archiv-Replikat
 
-- **Getrennter Fehlerbereich:** anderer Standort oder Anbieter in der EU, eigene Zugangsdaten, verschlüsselt. Ein einzelner
-  Ceph-Cluster schützt nicht vor Fehlbedienung, Softwarefehlern, Brand oder Ransomware.
-- **Velero** (Kopia, CSI-Snapshots von RBD-PVCs) und **CloudNativePG/Barman** (WAL, PITR) schreiben auf dieses Ziel.
-- **Archiv-Replikat:** Ein Job repliziert Archiv-Objekte (RGW-Multisite oder geplante Replikation) in einen Bucket des
-  Backup-Ziels **mit Object Lock** und prüft nach dem Kopieren den SHA-256. Das Ziel muss daher Object Lock unterstützen:
-  Kandidaten sind ein zweiter (kleiner) Ceph-Cluster oder SeaweedFS (Object Lock getestet, siehe oben); Garage unterstützt
-  nach unserem Kenntnisstand kein Object Lock und ist für das Archiv-Replikat nicht geeignet. Endgültige Wahl und Test: E13-01.
-- Restore-Tests regelmäßig automatisiert (E13-07), einschließlich Hash-Prüfung der Archivobjekte.
+Details (Velero, Barman, Rhythmen, Aufbewahrung, RPO/RTO) stehen in [operations.md](operations.md#backup-und-restore); hier die Storage-Seite.
+
+- **Offsite ist Pflicht.** Ein einzelner Ceph-Cluster (auch mit 3 Replikaten) schützt nicht vor Fehlbedienung, Softwarefehlern, Brand oder Ransomware. Das Ziel liegt an einem anderen Standort bzw. bei einem anderen Anbieter, in der EU, mit eigenen Zugangsdaten und Verschlüsselung.
+- **Velero** nutzt `snapshotMoveData`: Der CSI-Snapshot der RBD-Volumes wird per Kopia zum Offsite-Ziel übertragen. Nur der Snapshot im selben Ceph-Cluster wäre kein Backup.
+- **Ziel (Entscheidung):** S3 mit Object Lock und Versioning. Referenz: eigener SeaweedFS-Server (OSS, Object Lock getestet, siehe oben) an einem zweiten Standort; gleichwertig ein EU-S3-Dienst eines anderen Anbieters mit nachgewiesenem Object Lock. Ein zweiter Ceph-Cluster ist möglich, für den Start aber unverhältnismäßig. Garage unterstützt nach unserem Kenntnisstand kein Object Lock und scheidet aus; MinIO scheidet aus (AGPL, keine Community-Images mehr).
+- **Archiv-Replikat:** Der Archiv-Replikator (CronJob des Backends) kopiert jedes Archivobjekt in den Offsite-Bucket des Mandanten, übernimmt Retention-Modus und -Datum, prüft den SHA-256 und meldet Rückstand als Metrik. RGW-Multisite wird bewusst nicht verwendet: Es braucht einen zweiten Ceph-Cluster und repliziert auch Fehler und Löschmarker. Der Replikator-User darf nur schreiben.
+- **Wiederherstellung des Archivs** erfolgt aus dem Offsite-Bucket in einen neuen RGW-Bucket mit Object Lock; Retention-Daten werden beim Zurückspielen erneut gesetzt (E13-06).
+- Restore-Tests laufen regelmäßig automatisiert (E13-07), einschließlich Hash-Prüfung der Archivobjekte.
 
 ## Umsetzung in den Epics
 
@@ -103,5 +103,6 @@ Quotas je Mandant: `ResourceQuota` für PVCs (E12-05) und RGW-User-/Bucket-Quota
 | E11-03 | Lösch-/Sperrkonzept mit nicht umkehrbarer Retention |
 | E12-01 / E12-04 | Rook-Ceph in der Cluster-Basis, StorageClasses, Quotas, Verschlüsselung |
 | E12-07 / E12-10 | Provisioning von Bucket, RGW-User und Secret; Offboarding mit bestehen bleibenden Archiv-Buckets |
-| E13-01 / E13-02 / E13-03 | Backup-Ziel mit Object Lock, Velero, Barman |
+| E13-01 / E13-02 / E13-03 | Offsite-Ziel mit Object Lock, Velero (`snapshotMoveData`), Barman |
+| E13-11 | Archiv-Replikator |
 | E17 | Ceph-Monitoring und -Alarme |

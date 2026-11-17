@@ -13,7 +13,7 @@
 | PDF | PDFCraft als zustandslose Render-Engine über REST (`/v1`); FediFinance speichert alle Daten und PDFs ([pdfcraft.md](pdfcraft.md)) |
 | Gestaltung | Material Design 3 mit dem Design-System von PDFCraft (Tokens, Komponenten, Icons, Papier-Editor), Farbschema unverändert ([design.md](design.md)) |
 | Deployment | Kubernetes + Helm, ein Namespace/Release je Kunde |
-| Backup | Velero + Datenexport |
+| Backup | Velero (Kopia, `snapshotMoveData`) + CloudNativePG/Barman + Archiv-Replikator, **Offsite** (S3 mit Object Lock, anderer Standort, EU) + Datenexport; Rhythmen, Aufbewahrung, RPO/RTO in [operations.md](operations.md#backup-und-restore) |
 | Lizenzen | Nur Open-Source-Infrastruktur |
 | KI | Pro Kunde eigenes Datensilo; Start CPU, später NVIDIA Ampere |
 
@@ -30,7 +30,7 @@
 | KI-Basismodell | Qwen3 (Apache 2.0), Embeddings BGE-M3 | E14 |
 | LLM-Serving | llama.cpp (CPU) → vLLM (GPU) | E14, E19 |
 | Vektorsuche | pgvector in Mandanten-DB | E14 |
-| Objektspeicher für Backups | Getrennt vom Ceph-Cluster, mit Object Lock für das Archiv-Replikat: zweiter Ceph-Cluster oder SeaweedFS (Object Lock getestet); Garage nur ohne Archiv-Replikat; MinIO scheidet aus (AGPL, keine Community-Images mehr). In der Dev-Umgebung: SeaweedFS | E13 |
+| Offsite-Backup-Ziel | S3 mit Object Lock und Versioning, anderer Standort/Anbieter in der EU; Referenz SeaweedFS (Object Lock getestet), Garage/MinIO scheiden aus; bestätigen mit dem Test aus E13-01 | E13 |
 | Archiv-Storage | **Rook-Ceph (min. 3 Nodes, Replikation 3, RBD + RGW)**; Archiv als S3-Bucket je Mandant mit Object Lock (Compliance in Produktion, Governance in Dev/Test), Fallback PVC mit Write-once in der Anwendung; PDFs nie in der DB ([storage.md](storage.md)) | E08, E12 |
 | Keycloak-Topologie | Ein Keycloak, ein Realm je Mandant | E02 |
 
@@ -58,3 +58,4 @@
 - 11/2026: Archiv-Storage geklärt (Konzept): GoBD verlangt kein bestimmtes Medium; Ceph (CephFS/RBD/RGW) ist geeignet, Unveränderbarkeit über Hash-Adressierung, Write-once und S3 Object Lock; keine PDFs in der DB. E08-01, E11-03, E12-04, compliance.md ergänzt; Rückfrage als Nr. 12.
 - 11/2026: Frage 12 geklärt: freie Wahl der Storage-Software im Cluster; Vorschlag Rook-Ceph (RGW + Object Lock), Alternativen nach Clustergröße.
 - 11/2026: Start mit mindestens 3 Nodes festgelegt; Storage-Entscheidungen S1–S6 in [storage.md](storage.md) dokumentiert (Rook-Ceph, Object Lock, Backup-Ziel, Offboarding); Object Lock in SeaweedFS (Dev) geprüft.
+- 11/2026: Offsite-Backup entschieden: Velero mit `snapshotMoveData`, Barman, Archiv-Replikator (E13-11) in ein S3-Ziel mit Object Lock an anderem Standort; Aufbewahrung 30 Tage/12 Wochen, RPO/RTO festgelegt; Rest-Unsicherheit nur noch Standort/Anbieter des Offsite-Ziels (Betreiberentscheidung).
