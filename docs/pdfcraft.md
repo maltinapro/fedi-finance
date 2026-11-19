@@ -93,7 +93,7 @@ fehl, wird zurückgerollt (keine Lücke, kein Beleg ohne PDF). Details in E06-04
 ## 4. Betrieb
 
 - **Image:** `ghcr.io/maltinapro/pdfcraft-backend:<version>` (Release-Workflow von PDFCraft), Version im
-  FediFinance-Chart gepinnt; Upgrade nur mit grünem Contract-Test (E07-02).
+  FediFinance-Chart gepinnt (Dev-Umgebung: `deploy/dev/compose.yaml`, derzeit `0.31.0`); Upgrade nur mit grünem Contract-Test (E07-02).
 - **Valkey:** PDFCraft benötigt für `/v1` Valkey (Token-Hashes, Rate-Limit). Keine Kundendaten darin.
 - **Token:** je Mandant ein Token ohne Wasserzeichen (`pdfcraft-backend tokens create --plan <plan> --days <n>`)
   als Kubernetes-Secret; Rotation über das Provisioning (E12-07). `PAID_TOKENS_ENABLED=true`, Mollie/Kauf/Anubis

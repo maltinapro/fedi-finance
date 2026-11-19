@@ -1,0 +1,6 @@
+apiVersion: v2
+name: fedifinance
+description: FediFinance instance for a single tenant (skeleton, see docs/epics/E12-mandanten-infrastruktur.md)
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

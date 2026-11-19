@@ -1,0 +1,7 @@
+# Default values for the FediFinance chart (one release per tenant namespace).
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name: ""
