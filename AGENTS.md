@@ -87,7 +87,7 @@ Run from the repository root; `make help` lists all targets. `make check` runs w
 | `make fmt` | `cargo fmt`, `npm run format` |
 | `cd backend && cargo deny check` | advisories, licenses (OSS only), sources; needs `cargo install cargo-deny` |
 
-Dev ports (all bound to 127.0.0.1): Postgres 5432, Keycloak 8081, S3 9000, PDFCraft 3000; override via `deploy/dev/.env` (see `.env.example`). Credentials there are local-only defaults.
+The frontend is not part of the compose stack; run it with `cd frontend && npm run dev` (Vite, http://localhost:5173). Dev ports (all bound to 127.0.0.1): Postgres 5432, Keycloak 8081, S3 9000, PDFCraft 3000; override via `deploy/dev/.env` (see `.env.example`). Credentials there are local-only defaults.
 
 ## Roadmap / TODOs (resume here)
 

@@ -37,6 +37,8 @@ Voraussetzungen: Rust (stable), Node.js ≥ 24, Docker mit Compose, Helm, `make`
 | `make check` | Alles wie in der CI |
 | `make fmt` | Code formatieren |
 
+Das Frontend ist **nicht** Teil von `make dev`: es läuft separat mit `cd frontend && npm install && npm run dev` unter <http://localhost:5173>. Dienste der Dev-Umgebung: Keycloak <http://localhost:8081>, PDFCraft <http://localhost:3000>, S3 <http://localhost:9000>, Postgres `localhost:5432`.
+
 Struktur: `backend/` (Rust), `frontend/` (TypeScript/React), `deploy/` (Helm, Dev-Umgebung), `ai/`, `docs/`.
 
 ## Lizenz
