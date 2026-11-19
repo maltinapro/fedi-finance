@@ -21,7 +21,7 @@ Key characteristics:
 - Only open source infrastructure software.
 
 Tech stack: Rust (backend), TypeScript/React + Vite (frontend, same stack as PDFCraft), Node.js (tooling, optional AI gateway), PostgreSQL, Keycloak,
-PVC or S3 (Object Lock) document storage, Helm/Kubernetes, vLLM (later on NVIDIA Ampere GPUs).
+S3 document storage (buckets `data` + `archive` with Object Lock; Ceph RGW in the cluster), Helm/Kubernetes, vLLM (later on NVIDIA Ampere GPUs).
 
 Status: **foundation done (E00)** – repository skeleton, CI and dev environment exist; no application logic yet. The concept lives in `docs/`, the work breakdown in `docs/epics/`.
 
@@ -35,7 +35,7 @@ Status: **foundation done (E00)** – repository skeleton, CI and dev environmen
 | `docs/federation.md` | ActivityPub design |
 | `docs/compliance.md` | GoBD, retention, GDPR, e-invoicing |
 | `docs/ai.md` | AI concept and model recommendation |
-| `docs/storage.md` | Storage: Rook-Ceph (min. 3 Nodes), Archiv mit S3 Object Lock, Backup-Ziel, Offboarding |
+| `docs/storage.md` | Storage: S3-only app contract, buckets `data`/`archive`, credentials provisioning, Rook-Ceph (min. 3 Nodes), offsite backup, offboarding |
 | `docs/operations.md` | Kubernetes, Helm, backup, export |
 | `docs/pdfcraft.md` | PDFCraft features, REST integration, operation, frontend strategy, upstream requirements (R1–R11) |
 | `docs/design.md` | Design guide (Material Design 3, adopted from PDFCraft; only FediFinance additions/deviations) |

@@ -16,13 +16,13 @@
 1. Anlegen: Namespace, Quotas, Keycloak-Realm, DB, Storage, PDFCraft-Token (Secret), Helm-Release, DNS/Zertifikat, Initial-Admin.
 2. Betrieb: Upgrades per `helm upgrade` (DB-Migrationen als Job), gestaffelte Rollouts.
 3. Export: Archiv mit allen Daten (siehe unten).
-4. Offboarding: Export bereitstellen, Aufbewahrungsfristen beachten, Namespace + Volumes + Backups gemäß Konzept löschen; die Archiv-Buckets mit Object Lock bleiben bis Fristende bestehen ([storage.md](storage.md#4-mandanten-offboarding-und-dsgvo)).
+4. Offboarding: Export bereitstellen, Aufbewahrungsfristen beachten, Namespace + Volumes + Backups gemäß Konzept löschen; die Archiv-Buckets mit Object Lock bleiben bis Fristende bestehen ([storage.md](storage.md#7-mandanten-offboarding-und-dsgvo)).
 
 ## Backup und Restore
 
-Entscheidungen (11/2026), Begründung der Storage-Seite in [storage.md](storage.md#5-offsite-backup-und-archiv-replikat):
+Entscheidungen (11/2026), Begründung der Storage-Seite in [storage.md](storage.md#8-offsite-backup-und-archiv-replikat):
 
-- **Velero** sichert Kubernetes-Objekte und Volumes; **CloudNativePG/Barman** sichert PostgreSQL (WAL, PITR); das **Archiv** (RGW-Buckets mit Object Lock) wird von einem eigenen Replikationsjob gesichert (Velero sichert keine RGW-Objekte).
+- **Velero** sichert Kubernetes-Objekte und Volumes; **CloudNativePG/Barman** sichert PostgreSQL (WAL, PITR); das **Archiv** (RGW-Buckets mit Object Lock) wird von einem eigenen Replikationsjob gesichert (Velero sichert keine S3-Objekte).
 - **Offsite ist Pflicht:** Alle Backups liegen in einem anderen Fehlerbereich als der Ceph-Cluster (anderer Standort, in der EU, eigene Zugangsdaten). Ein Ceph-Cluster mit 3 Replikaten ist kein Backup.
 - Regel **3-2-1**: Live-Daten (Ceph) + Offsite-Kopie auf einem zweiten System; zusätzlich schützt Versioning/Object Lock im Offsite-Ziel vor Ransomware und Fehlbedienung.
 
@@ -30,7 +30,7 @@ Entscheidungen (11/2026), Begründung der Storage-Seite in [storage.md](storage.
 | --- | --- | --- | --- | --- |
 | Kubernetes-Objekte, Secrets, PVCs (RBD) | **Velero** mit Kopia: CSI-Snapshot, dann `snapshotMoveData: true` (Daten werden zum Offsite-Ziel verschoben; ein Snapshot allein läge im selben Ceph-Cluster und zählt nicht als Backup) | Manifeste, Helm-Release-Werte, Secrets, Keycloak-/Valkey-/KI-Volumes | Bucket `velero` | täglich (Nacht), RPO 24 h |
 | PostgreSQL (Mandanten-DBs, Keycloak-DB) | CloudNativePG: Barman-Cloud-Plugin, fortlaufende WAL-Archivierung, Basis-Backup täglich | Datenbanken, PITR | Bucket `postgres` | RPO ≤ 5 min (`archive_timeout` 5 min) |
-| Dokumentenarchiv | **Archiv-Replikator** (CronJob des Backends, siehe unten) | PDFs/XML/Snapshots mit Retention | Bucket je Mandant mit Object Lock | RPO ≤ 15 min nach Freigabe, Alarm bei > 1 h Rückstand |
+| Dokumentenarchiv | **Archiv-Replikator** (CronJob des Backends, siehe unten) | `archive`-Bucket (PDFs/XML/Snapshots mit Retention) und `data/uploads/` | Bucket je Mandant mit Object Lock | RPO ≤ 15 min nach Freigabe, Alarm bei > 1 h Rückstand |
 | Reine Daten | Logischer Export (E13-04), unabhängig von Kubernetes | Portable Sicherung | auf Anforderung | – |
 | Cluster-Steuerung | Etcd-/Control-Plane-Backup der Kubernetes-Distribution, Rook-Ceph-Konfiguration (per Velero/GitOps) | Cluster-Zustand | Bucket `cluster` | täglich |
 
@@ -46,7 +46,7 @@ Bevor das Ziel produktiv genutzt wird, ist der Object-Lock-Test aus E13-01 zu be
 - Verschlüsselung: Kopia-Repository-Verschlüsselung (Passwort als Secret, zusätzlich im Offline-Tresor der Betreiber hinterlegt – ohne dieses Passwort sind die Backups wertlos), Barman-Backups serverseitig verschlüsselt, TLS auf dem Transport.
 - Der Archiv-Replikator arbeitet mit eigenen, nur schreibenden Zugangsdaten und legt mit **derselben Retention und demselben Modus** (Compliance in Produktion) wie das Original ab; Offsite-Löschung vor Fristende ist so ebenfalls unmöglich.
 
-**Archiv-Replikator:** Das Backend merkt sich je Archivobjekt, ob es offsite liegt (Metadaten in der DB). Der Job kopiert fehlende Objekte (Hash-Key bleibt gleich), liest Retention-Modus und -Datum vom Original, setzt sie am Replikat, prüft den SHA-256 nach dem Kopieren und meldet Rückstand und Fehler als Metrik (Alarm in E17-04). Die Freigabe eines Belegs bleibt gültig, auch wenn die Replikation hinterherhinkt.
+**Archiv-Replikator:** Das Backend merkt sich je Archivobjekt, ob es offsite liegt (Metadaten in der DB). Der Job (er spricht nur S3, unabhängig von Ceph) kopiert fehlende Objekte (Hash-Key bleibt gleich), liest Retention-Modus und -Datum vom Original, setzt sie am Replikat, prüft den SHA-256 nach dem Kopieren und meldet Rückstand und Fehler als Metrik (Alarm in E17-04). Die Freigabe eines Belegs bleibt gültig, auch wenn die Replikation hinterherhinkt.
 
 **Aufbewahrung der Backups (Standard, je Mandant konfigurierbar):**
 

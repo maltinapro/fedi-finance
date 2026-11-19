@@ -7,7 +7,7 @@
 | Backend | Rust |
 | Frontend | TypeScript (Node.js für Tooling) |
 | Datenbank | PostgreSQL |
-| Dateispeicher | Dateisystem (PVC) oder S3 mit Object Lock für PDFs, nie in der DB (siehe Vorschlag „Archiv-Storage“) |
+| Dateispeicher | S3 (Buckets `data` und `archive` mit Object Lock) für PDFs und Belege, nie in der DB und nicht auf PVCs ([storage.md](storage.md)) |
 | Identity | Keycloak (OIDC, SSO, externe IdPs) |
 | Föderation | ActivityPub |
 | PDF | PDFCraft als zustandslose Render-Engine über REST (`/v1`); FediFinance speichert alle Daten und PDFs ([pdfcraft.md](pdfcraft.md)) |
@@ -31,7 +31,8 @@
 | LLM-Serving | llama.cpp (CPU) → vLLM (GPU) | E14, E19 |
 | Vektorsuche | pgvector in Mandanten-DB | E14 |
 | Offsite-Backup-Ziel | S3 mit Object Lock und Versioning, anderer Standort/Anbieter in der EU; Referenz SeaweedFS (Object Lock getestet), Garage/MinIO scheiden aus; bestätigen mit dem Test aus E13-01 | E13 |
-| Archiv-Storage | **Rook-Ceph (min. 3 Nodes, Replikation 3, RBD + RGW)**; Archiv als S3-Bucket je Mandant mit Object Lock (Compliance in Produktion, Governance in Dev/Test), Fallback PVC mit Write-once in der Anwendung; PDFs nie in der DB ([storage.md](storage.md)) | E08, E12 |
+| Dokumentenspeicher | **S3 only, provider-neutral:** zwei Buckets je Mandant, `data` (aktuelle Daten) und `archive` (Object Lock, hash-adressiert); Zugangsdaten als Secret im Mandanten-Namespace per Operator/Provisioner; kein PVC-Backend für Dokumente ([storage.md](storage.md)) | E08, E12 |
+| Cluster-Storage | Rook-Ceph (min. 3 Nodes, Replikation 3): RBD für PVCs, RGW als S3-Dienst; für die Anwendung irrelevant ([storage.md](storage.md#6-cluster-storage-rook-ceph)) | E12 |
 | Keycloak-Topologie | Ein Keycloak, ein Realm je Mandant | E02 |
 
 ## Offene Fragen
@@ -59,3 +60,4 @@
 - 11/2026: Frage 12 geklärt: freie Wahl der Storage-Software im Cluster; Vorschlag Rook-Ceph (RGW + Object Lock), Alternativen nach Clustergröße.
 - 11/2026: Start mit mindestens 3 Nodes festgelegt; Storage-Entscheidungen S1–S6 in [storage.md](storage.md) dokumentiert (Rook-Ceph, Object Lock, Backup-Ziel, Offboarding); Object Lock in SeaweedFS (Dev) geprüft.
 - 11/2026: Offsite-Backup entschieden: Velero mit `snapshotMoveData`, Barman, Archiv-Replikator (E13-11) in ein S3-Ziel mit Object Lock an anderem Standort; Aufbewahrung 30 Tage/12 Wochen, RPO/RTO festgelegt; Rest-Unsicherheit nur noch Standort/Anbieter des Offsite-Ziels (Betreiberentscheidung).
+- 11/2026: Storage auf „S3 only“ umgestellt: Anwendung kennt nur S3 (Ceph ist Infrastruktur), PVC-Dokumentenbackend entfällt, zwei Buckets je Mandant (`data`, `archive`), Zugangsdaten per Operator/Provisioner als Secrets (Rook-OBC für `data`, Provisioner-Job für `archive`, Spike zu Object Lock in OBC in E12-04).

@@ -22,16 +22,16 @@
 Die GoBD schreiben **keine bestimmte Technik** vor (kein WORM-Zwang). Die Unveränderbarkeit darf hardwaremäßig,
 softwaremäßig oder organisatorisch sichergestellt werden; Änderungen müssen protokolliert werden und der Originalzustand
 muss erkennbar bleiben (GoBD Rz. 107 ff., Randziffern von der Steuerberatung prüfen lassen). Konformität entsteht daher
-aus dem **Verfahren** (siehe Verfahrensdokumentation), nicht aus dem Speichermedium. Ein gewöhnliches PVC (CephFS, RBD,
-lokaler Storage) ist für sich genommen **nicht** unveränderbar: Ein Admin oder ein kompromittierter Pod könnte Dateien
+aus dem **Verfahren** (siehe Verfahrensdokumentation), nicht aus dem Speichermedium. Ein gewöhnlicher Speicher ohne Sperre (PVC, Bucket
+ohne Object Lock) ist für sich genommen **nicht** unveränderbar: Ein Admin oder ein kompromittierter Pod könnte Dateien
 überschreiben. Deshalb werden mehrere Schichten kombiniert; PDFs, XML und Render-Snapshots liegen **nicht** in der Datenbank
 (DB-Admins könnten ebenso ändern, und Blobs blähen Backups und WAL auf):
 
 | Schicht | Maßnahme | Epic |
 | --- | --- | --- |
 | 1. Hash-adressierte Ablage | Objektname = SHA-256 des Inhalts; die DB hält nur Metadaten (Hash, Zeitstempel, Aufbewahrungsfrist, Beleg-ID) | E08-01 |
-| 2. Write-once in der Anwendung | Nur „neu anlegen, nie überschreiben“; kein Code-Pfad zum Ändern oder Löschen vor Fristablauf | E08-01 |
-| 3. Technische Sperre im Storage | **S3 Object Lock** (Compliance-Modus) mit Retention bis Fristende, z. B. Ceph RGW; auch Admins können dann nicht ändern oder löschen. Bei reinem PVC nur schwächere Ersatzmaßnahmen (Rechte, Read-only-Mount) | E08-01, E12-04 |
+| 2. Write-once in der Anwendung | Nur „neu anlegen, nie überschreiben“ (`ArchiveStore` ohne Überschreiben/Löschen); kein Code-Pfad zum Ändern oder Löschen vor Fristablauf | E08-01 |
+| 3. Technische Sperre im Storage | **S3 Object Lock** (Compliance-Modus) mit Retention bis Fristende, im Archiv-Bucket jedes S3-Providers mit Object Lock (im Zielcluster Ceph RGW); auch Admins können dann nicht ändern oder löschen. Ohne Object Lock nur schwächere Ersatzmaßnahmen (Rechte), daher nicht für Produktion | E08-01, E12-04 |
 | 4. Integritätsprüfung | Hash-Kette im Audit-Log, periodischer Hash-Abgleich, optional RFC-3161-Zeitstempel | E08-04, E08-05 |
 | 5. Backup | Velero und DB-Backups auf getrenntes Ziel; ein einzelner Storage-Cluster (auch Ceph) ist kein Backup | E13 |
 | 6. Verfahrensdokumentation | Beschreibung, wie Unveränderbarkeit, Zugriff und Aufbewahrung umgesetzt sind; Konformitätsnachweis | E08-08 |
