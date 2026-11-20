@@ -1,6 +1,8 @@
-# FediFinance
+<p align="center">
+  <img src="assets/logo.svg" alt="FediFinance logo" width="360" />
+</p>
 
-<img src="assets/logo.svg" alt="FediFinance logo" width="120" />
+# FediFinance
 
 Föderierte, GoBD-konforme Buchhaltungssoftware. Jedes Unternehmen betreibt einen eigenen FediFinance-Server;
 Server tauschen Stammdaten und Belege (z. B. Rechnungen) über **ActivityPub** aus – dezentral wie Mastodon.
