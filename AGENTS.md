@@ -95,7 +95,7 @@ Full list with status: `docs/roadmap.md`. Next steps:
 
 - [ ] Review the epics in `docs/epics/` and adjust them (scope, order). PDFCraft alignment done (11/2026): E03, E07 rewritten, E00/E04/E06/E12 adjusted.
 - [x] Phase-0 GitHub issues synced with the epic files (#5, #6, #31, #32, #33, #34, #37–#40); E03-10 created as #44.
-- [x] PDFCraft upstream requests R1–R11 created (maltinapro/pdfcraft#214–#224); keep their status in `docs/pdfcraft.md` §7.
+- [x] PDFCraft upstream requests R1–R11 created (maltinapro/pdfcraft#214–#224) and implemented upstream (11/2026; release pending: maltinapro/pdfcraft#244, npm package publishing: maltinapro/pdfcraft#243); keep their status in `docs/pdfcraft.md` §7.
 - [ ] Legal review of mandatory details on invoices/business letters by a tax/legal advisor (#45) before the first real customer.
 - [x] `E00` (repository foundation: monorepo skeleton, CI, dev environment) done. Open: maintainer decision on project license (#8) and vocabulary domain (#9) in `docs/decisions.md`.
 - [ ] Then `E01` (Rust backend skeleton) and `E02` (auth with Keycloak).
