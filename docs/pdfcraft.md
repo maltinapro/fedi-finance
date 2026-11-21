@@ -5,24 +5,27 @@ Gestaltung (Material Design 3, siehe [design.md](design.md)). PDFCraft bleibt ei
 es speichert keine Kunden- oder Belegdaten. Speichern, Nummerieren, Festschreiben, Archivieren, Versenden und Buchen
 übernimmt FediFinance.
 
-Geprüfter Stand: PDFCraft `main` @ `3b4bb0b` (16.11.2026; seit `00c5e04` nur Dependency-Updates). Bei neuen PDFCraft-Versionen diesen Abschnitt und die
+Geprüfter Stand: PDFCraft `main` @ `6fbc2e6` (21.11.2026; R1–R11 umgesetzt, aber noch in keinem Release – letztes Release
+`v0.32.0`, siehe [Abschnitt 7](#7-anforderungen-an-pdfcraft-upstream)). Bei neuen PDFCraft-Versionen diesen Abschnitt und die
 Anforderungsliste ([Abschnitt 7](#7-anforderungen-an-pdfcraft-upstream)) aktualisieren.
 
 ## 1. Was PDFCraft heute kann
 
 | Bereich | Funktion (PDFCraft) | Nutzen für FediFinance |
 | --- | --- | --- |
-| Belegarten | Rechnung, Gutschrift/Stornorechnung, Angebot, Auftragsbestätigung, Lieferschein, Brief (DIN 5008 Form B) | Ausgangsbelege und Vorgangskette ohne eigene Vorlagen |
+| Belegarten | Rechnung, Gutschrift/Stornorechnung, Angebot, Auftragsbestätigung, Lieferschein, Brief (DIN 5008 Form B); nur per API: Mahnung (`dunning`, Stufe 1–3, Gebühren, Verzugszinsen nach § 288 BGB übergeben oder aus der Basiszinstabelle berechnet) und Bericht (`report`, Tabellen mit Spaltentypen, Gruppen-/Gesamtsummen, Querformat, „Seite x von y", max. 10 000 Zeilen) | Ausgangsbelege, Vorgangskette, Mahnwesen (E09) und Auswertungen ohne eigene Vorlagen |
 | PDF-Designs | *Classic* (sachlich), *Modern Minimal* (luftig, Infoblock rechts neben dem Anschriftfeld, große Zahlbetrag-Zeile), *Contrast* (Akzent-Kopfband, Akzent-Tabellenkopf, Summenbox); gemeinsames Layoutmodul `layout.typ` mit Design-Tokens; DIN-Positionen in allen Designs gleich | Design-Auswahl im Erscheinungsbild des Unternehmens |
-| Gestaltung | Logo, Unterschriftsbild, Akzentfarbe (Kontrastprüfung), Schriftart, Einleitungs-/Schluss-/Fußtext, Wasserzeichen „Entwurf" | Briefpapier je Mandant |
+| Gestaltung | Logo, Unterschriftsbild, Akzentfarbe (Kontrastprüfung), Schriftart, Einleitungs-/Schluss-/Fußtext, Wasserzeichen „Entwurf" (je Request per `options.watermark: "draft"`), strukturierter Fuß (`settings.footerMode: "structured"`: Kontakt, Rechtsform/Sitz/Registergericht/-nummer/Geschäftsführung/AR-Vorsitz, Bank und Steuerdaten) | Briefpapier je Mandant, Pflichtangaben aus Stammdaten |
 | E-Rechnung | PDF/A-3b mit eingebettetem XML (EN 16931 CII oder XRechnung), Factur-X-XMP; Korpus in der PDFCraft-CI mit Mustang validiert; bei Lücken wird `invoice-draft.xml` eingebettet | ZUGFeRD/XRechnung ohne eigene XML-Erzeugung |
-| API | REST `/v1`: `POST /v1/invoices`, `/v1/documents`, `/v1/invoices/bulk`, `/v1/documents/bulk` (ZIP), `GET /v1/token`, `GET /health`; OpenAPI 3.1 (`docs/openapi.yaml`, aus dem Code generiert) | Typsicherer Client, Contract-Tests |
+| API | REST `/v1`: `POST /v1/invoices`, `/v1/documents`, `/v1/invoices/bulk`, `/v1/documents/bulk` (ZIP), `POST /v1/einvoices/parse` (E-Rechnung lesen + Plausibilitätsprüfung, zustandslos), `GET /v1/token`, `GET /v1/version` (Version, Commit, Typst, Template-Hashes je Belegart; Header `X-Pdfcraft-Version` an jeder Antwort), `GET /health`; OpenAPI 3.1 (`docs/openapi.yaml`, aus dem Code generiert) | Typsicherer Client, Contract-Tests, Render-Snapshot |
+| Tokens | Paid-/Free-Tokens in Valkey; statische Dienst-Tokens (`SERVICE_TOKENS`/`SERVICE_TOKENS_FILE`, SHA-256-Hashes, ohne Ablauf, `tokens create-service`), ohne Valkey mit Rate-Limit je Instanz | Ein Token je Mandant ohne Rotation und ggf. ohne Valkey |
+| Reproduzierbarkeit | Byte-identische PDFs bei gleicher Eingabe und gleichem Build, abgesichert durch Tests über alle Belegarten × Designs (auch prozessübergreifend); Grenzen (Version, Typst, Schriften, Plattform) in `docs/09-api-reference.md` | Hash-Prüfung und Neu-Rendern aus dem Snapshot (E07-11) |
 | Vorschau | `?zones=1` liefert im Header `X-Pdfcraft-Zones` die Geometrie der Zonen 3/4 (mm, Seite) für die klickbare Vorschau | Papier-Editor mit Zonen-Overlay |
 | Leistung | typ. 5–12 ms je Rechnung (3 Positionen), Compile-Queue mit Lastabwurf (`503 server_busy` + `Retry-After`), Rate-Limit je Token (`429` + `Retry-After`) | Synchrone Vorschau, Bulk über Jobs |
-| Frontend | React 19 + Vite + TS, ohne UI-Bibliothek; Design-Tokens (`tokens.css`), Komponenten (`components/ui/`), Inline-SVG-Icons, Inter (self-hosted), Hell/Dunkel/System, hoher Kontrast, `tr(de, en)` | Basis des FediFinance-Frontends ([Abschnitt 6](#6-frontend-strategie)) |
-| Editor | Papier-Editor mit vier Zonen (Absender & Aussehen, Empfänger, Details, Positionen), Stepper, Klick auf das PDF öffnet die Felder, Splitter (Desktop) bzw. Formular/Vorschau-Tabs (mobil), Positionskarten mit Zeilensumme, Hinweisliste | Belegeditor (E07-06) |
-| Weitere | Stammdaten Kunden/Artikel, Belegarchiv mit ZIP-Download und Folgebelegen, E-Rechnungs-Viewer und Plausibilitätsprüfung (CII/UBL, nur im Browser), Leistungsdatum/-zeitraum und Fälligkeit, Internetmarke (optional, standardmäßig aus), Prometheus-Metriken + Grafana-Dashboards, Helm-Demo-Chart | Vorbild für Stammdaten, Archiv, Eingangsrechnungen, Betrieb |
-| Nicht vorhanden | Serverseitige Speicherung (alles liegt im Browser bzw. in einer JSON-Sicherung), Benutzer/Rollen, Nummernkreise, Buchhaltung, Mahnung, Berichte | → Aufgabe von FediFinance bzw. Anforderungen (Abschnitt 7) |
+| Frontend | React 19 + Vite + TS, ohne UI-Bibliothek; Design-System als Workspace-Paket `@pdfcraft/design` (`frontend/packages/design`: `tokens.css` + Kontrasttest, `ui.css`, `ui`-Komponenten, Icons, `theme.ts`, Changelog), Inter (self-hosted), Hell/Dunkel/System, hoher Kontrast, `tr(de, en)` | Basis des FediFinance-Frontends ([Abschnitt 6](#6-frontend-strategie)) |
+| Editor | Papier-Editor als Paket `@pdfcraft/editor` (`frontend/packages/editor`, `PaperEditor` mit Adapter: `render` Pflicht, Kunden/Artikel/Porto/XML optional; Dokument und Einstellungen als Props) mit vier Zonen (Absender & Aussehen, Empfänger, Details, Positionen), Stepper, Klick auf das PDF öffnet die Felder, Splitter (Desktop) bzw. Formular/Vorschau-Tabs (mobil), Positionskarten mit Zeilensumme, Hinweisliste | Belegeditor (E07-06) |
+| Weitere | Stammdaten Kunden/Artikel, Belegarchiv mit ZIP-Download und Folgebelegen, E-Rechnungs-Viewer und Plausibilitätsprüfung (CII/UBL, im Browser und per `/v1/einvoices/parse`, Parität über Golden-Tests), Leistungsdatum/-zeitraum und Fälligkeit, Internetmarke (optional, standardmäßig aus), Prometheus-Metriken + Grafana-Dashboards, Helm-Chart mit `values-production.yaml` (nur `/v1`, HPA, PDB, NetworkPolicy, ServiceMonitor, OCI `oci://ghcr.io/maltinapro/charts/pdfcraft`) | Vorbild für Stammdaten, Archiv, Eingangsrechnungen, Betrieb |
+| Nicht vorhanden | Serverseitige Speicherung (alles liegt im Browser bzw. in einer JSON-Sicherung), Benutzer/Rollen, Nummernkreise, Buchhaltung, Mahnlauf/offene Posten; Mahnung und Bericht nur per API (kein Editor) | → Aufgabe von FediFinance bzw. Anforderungen (Abschnitt 7) |
 
 Lizenz: MIT (Vendored Typst-Pakete mit eigenen Lizenzen) – Übernahme von Code ist erlaubt; Herkunft vermerken.
 
@@ -61,20 +64,21 @@ FediFinance-Backend (Rust)
 
 1. **Vorschau (Entwurf):** Frontend sendet den Entwurf an `POST /api/v1/documents/{id}/preview` (Name vorläufig).
    Das Backend mappt, ruft PDFCraft mit `?zones=1` auf und gibt PDF und Zonen-Header zurück. Nicht gespeichert,
-   nicht protokolliert (nur Metriken). Vorschauen tragen „Entwurf" (setzt Anforderung R2 voraus).
+   nicht protokolliert (nur Metriken). Vorschauen tragen „Entwurf" (`options.watermark: "draft"`, R2).
 2. **Freigabe:** Belegnummer wird lückenlos vergeben (E06-04), das Backend rendert **einmal** final, extrahiert das
    eingebettete XML, prüft, dass es nicht `invoice-draft.xml` ist (sonst Abbruch), und legt PDF, XML und
    **Render-Snapshot** unveränderlich ab (E08-01). Danach wird der Beleg nie neu gerendert; Korrektur nur per
    Storno/Gutschrift.
 3. **Massenerzeugung:** Hintergrundjob (E01-08) nutzt die Bulk-Endpunkte (ZIP), beachtet `bulkMax` aus
    `GET /v1/token` und das Rate-Limit.
-4. **Empfang:** Eingehende ZUGFeRD/XRechnung-Dateien werden serverseitig geparst (E07-10); die Anzeige im UI
-   nutzt den Viewer-Code von PDFCraft.
+4. **Empfang:** Eingehende ZUGFeRD/XRechnung-Dateien werden serverseitig geparst (E07-10, bevorzugt über
+   `POST /v1/einvoices/parse`, R7); die Anzeige im UI nutzt den Viewer-Code von PDFCraft.
 
 ### Render-Snapshot
 
 Zu jedem festgeschriebenen PDF speichert FediFinance: Request-JSON an PDFCraft (inkl. Design, Akzentfarbe, Schrift,
-Texte; Logo/Unterschrift als Hash-Referenz statt Base64-Kopie), PDFCraft-Version (Image-Tag/Digest), Endpunkt,
+Texte; Logo/Unterschrift als Hash-Referenz statt Base64-Kopie), PDFCraft-Version (`X-Pdfcraft-Version`, Commit und
+Template-Hash der Belegart aus `GET /v1/version`, R3; zusätzlich Image-Digest), Endpunkt,
 Zeitpunkt, SHA-256 von PDF und XML. Damit ist nachvollziehbar, wie der Beleg entstanden ist; Designänderungen
 wirken nur auf neue Belege.
 
@@ -94,10 +98,13 @@ fehl, wird zurückgerollt (keine Lücke, kein Beleg ohne PDF). Details in E06-04
 
 - **Image:** `ghcr.io/maltinapro/pdfcraft-backend:<version>` (Release-Workflow von PDFCraft), Version im
   FediFinance-Chart gepinnt (Dev-Umgebung: `deploy/dev/compose.yaml`, derzeit `0.31.0`); Upgrade nur mit grünem Contract-Test (E07-02).
-- **Valkey:** PDFCraft benötigt für `/v1` Valkey (Token-Hashes, Rate-Limit). Keine Kundendaten darin.
-- **Token:** je Mandant ein Token ohne Wasserzeichen (`pdfcraft-backend tokens create --plan <plan> --days <n>`)
-  als Kubernetes-Secret; Rotation über das Provisioning (E12-07). `PAID_TOKENS_ENABLED=true`, Mollie/Kauf/Anubis
-  bleiben aus. Langfristig besser: statische Dienst-Tokens ohne Ablauf (R1).
+- **Valkey:** Paid-/Free-Tokens und das gemeinsame Rate-Limit brauchen Valkey (Token-Hashes, Rate-Limit; keine
+  Kundendaten). Mit statischen Dienst-Tokens (R1) läuft `/v1` auch ohne Valkey; das Rate-Limit gilt dann je Replika.
+- **Token:** je Mandant ein statisches Dienst-Token ohne Ablauf und ohne Wasserzeichen
+  (`pdfcraft-backend tokens create-service <mandant> --limit <n>`); PDFCraft erhält nur den SHA-256-Hash über
+  `SERVICE_TOKENS_FILE` (Chart: `backend.serviceTokensSecret`), FediFinance das Klartext-Token als Kubernetes-Secret
+  (Provisioning E12-07). Mollie/Kauf/Anubis bleiben aus. Bis zum PDFCraft-Release mit R1 (pdfcraft#244):
+  Paid-Token mit langer Laufzeit (`tokens create --plan <plan> --days <n>`, `PAID_TOKENS_ENABLED=true`) + Rotation.
 - **Deployment-Varianten** (Entscheidung in E07-01/E12-12):
 
 | Variante | Vorteile | Nachteile |
@@ -105,7 +112,8 @@ fehl, wird zurückgerollt (keine Lücke, kein Beleg ohne PDF). Details in E06-04
 | **Geteilt** (Namespace `pdfcraft`, ein Token je Mandant) – *Vorschlag Standard* | ein Deployment + ein Valkey für alle; PDFCraft speichert nichts, passt zur Regel „geteilte Ressourcen, getrennte Daten" | Belegdaten passieren einen gemeinsamen Prozess (nur im Speicher); NetworkPolicy-Egress zum Namespace nötig; ein Upgrade betrifft alle |
 | **Je Mandant** (im Namespace `tenant-<id>`) | strikte Isolation, Version je Mandant | Pod + Valkey je Mandant (Ressourcen, Betrieb) |
 
-  Das Chart unterstützt beides: `pdfcraft.enabled=true` (im Namespace) oder `pdfcraft.url` (extern/geteilt).
+  Das Chart unterstützt beides: `pdfcraft.enabled=true` (im Namespace) oder `pdfcraft.url` (extern/geteilt). Für
+  beide Varianten kann das PDFCraft-Chart (OCI, `values-production.yaml`, `fullnameOverride`; R11) genutzt werden.
 - **Netzwerk:** PDFCraft ist nur cluster-intern erreichbar (kein Ingress), `CORS_ALLOWED_ORIGINS` leer/strikt,
   `METRICS_ADDR` nur für Prometheus.
 - **Observability:** PDFCraft liefert `/metrics` und Grafana-Dashboards (`deploy/helm/pdfcraft/dashboards/`), die
@@ -153,23 +161,31 @@ Werkzeuge im Frontend wie in PDFCraft (npm, Vite, Vitest, oxlint, TypeScript), d
 
 Angelegt als Issues in `maltinapro/pdfcraft` (Label `enhancement`, 11/2026, E07-14); Status hier pflegen.
 
-| ID | Anforderung | Warum | Ersatz bis dahin | Issue |
-| --- | --- | --- | --- | --- |
-| R1 | Statische Dienst-Tokens (z. B. gehashte Tokens aus Env/Secret, ohne Ablauf; optional ohne Valkey) | Betrieb je Mandant ohne Token-Ablauf und ggf. ohne Valkey | Paid-Token mit langer Laufzeit + Rotation | [pdfcraft#214](https://github.com/maltinapro/pdfcraft/issues/214) offen |
-| R2 | Wasserzeichen „Entwurf" je Request steuerbar (auch für Paid-Tokens) | Vorschau unfreigegebener Belege eindeutig kennzeichnen | zweites Free-Token nur für Vorschauen (unschön) | [pdfcraft#215](https://github.com/maltinapro/pdfcraft/issues/215) offen |
-| R3 | Versionsauskunft (`GET /version` bzw. Header mit App- und Template-Version) | Render-Snapshot, Nachvollziehbarkeit | Image-Digest aus der Konfiguration | [pdfcraft#216](https://github.com/maltinapro/pdfcraft/issues/216) offen |
-| R4 | Garantiert deterministische Ausgabe (gleiche Eingabe + Version → gleiche Bytes) inkl. Test | Hash-Prüfung, Reproduzierbarkeit (E07-11) | eigener Test in FediFinance | [pdfcraft#217](https://github.com/maltinapro/pdfcraft/issues/217) offen |
-| R5 | Belegart Mahnung (Bezug auf offene Rechnungen, Gebühren, Zinsen) | Mahnwesen (E09) | Brief-Belegart mit Text | [pdfcraft#218](https://github.com/maltinapro/pdfcraft/issues/218) offen |
-| R6 | Berichts-/Tabellendokument (Journal, Summen-/Saldenliste, BWA, Verfahrensdokumentation, Prüfer-Export-Deckblatt) | Auswertungen als PDF | eigene Typst-Vorlage in FediFinance prüfen | [pdfcraft#219](https://github.com/maltinapro/pdfcraft/issues/219) offen |
-| R7 | Zustandsloser Endpunkt „E-Rechnung parsen/prüfen" (PDF/XML → normalisiertes JSON + Prüfergebnis) | Eingangsrechnungen serverseitig mit derselben Logik wie der Viewer | eigener Rust-Parser (E07-10) | [pdfcraft#220](https://github.com/maltinapro/pdfcraft/issues/220) offen |
-| R8 | Papier-Editor als Paket mit austauschbarer Datenquelle | Frontend-Strategie C | Portierung mit Herkunftsvermerk | [pdfcraft#221](https://github.com/maltinapro/pdfcraft/issues/221) offen |
-| R9 | Design-System als Paket (Tokens, `ui`, Icons) | Drift vermeiden | Kopie + Drift-Check (E03-10) | [pdfcraft#222](https://github.com/maltinapro/pdfcraft/issues/222) offen |
-| R10 | Strukturierter Fuß (Kontakt / Bank / Steuer- und Registerdaten) über die API; PDFCraft E11-05 ([#189](https://github.com/maltinapro/pdfcraft/issues/189)) ist geschlossen, laut Epic aber offen und nicht in der API | Pflichtangaben auf Geschäftsbriefen (§ 37a HGB, § 35a GmbHG) aus Stammdaten | freier Fußtext aus Stammdaten generiert | [pdfcraft#223](https://github.com/maltinapro/pdfcraft/issues/223) offen |
-| R11 | Produktions-Helm-Chart oder Chart-Bausteine | Einbindung in das FediFinance-Chart | eigene Templates im FediFinance-Chart | [pdfcraft#224](https://github.com/maltinapro/pdfcraft/issues/224) offen |
+Stand 21.11.2026 (PDFCraft `main` @ `6fbc2e6`): **alle Anforderungen umgesetzt** (PRs [pdfcraft#230](https://github.com/maltinapro/pdfcraft/pull/230)–[pdfcraft#240](https://github.com/maltinapro/pdfcraft/pull/240), CI grün). Sie
+sind aber noch in keinem Release (letztes Release `v0.32.0` vom 19.11.2026) → [pdfcraft#244](https://github.com/maltinapro/pdfcraft/issues/244). Die npm-Pakete (R8, R9) lassen
+sich mit dem Scope `@pdfcraft` nicht aus `maltinapro/pdfcraft` in GitHub Packages veröffentlichen → [pdfcraft#243](https://github.com/maltinapro/pdfcraft/issues/243). Bis dahin
+gilt die Spalte „Ersatz bis dahin".
+
+| ID | Anforderung | Warum | Ersatz bis dahin | Issue | Status / Umsetzung |
+| --- | --- | --- | --- | --- | --- |
+| R1 | Statische Dienst-Tokens (z. B. gehashte Tokens aus Env/Secret, ohne Ablauf; optional ohne Valkey) | Betrieb je Mandant ohne Token-Ablauf und ggf. ohne Valkey | Paid-Token mit langer Laufzeit + Rotation | [pdfcraft#214](https://github.com/maltinapro/pdfcraft/issues/214) | ✔ [pdfcraft#230](https://github.com/maltinapro/pdfcraft/pull/230): `SERVICE_TOKENS`/`SERVICE_TOKENS_FILE` (`<id>:<sha256>:<plan oder limit>`), `tokens create-service`; ohne Valkey Rate-Limit je Replika |
+| R2 | Wasserzeichen „Entwurf" je Request steuerbar (auch für Paid-Tokens) | Vorschau unfreigegebener Belege eindeutig kennzeichnen | zweites Free-Token nur für Vorschauen (unschön) | [pdfcraft#215](https://github.com/maltinapro/pdfcraft/issues/215) | ✔ [pdfcraft#231](https://github.com/maltinapro/pdfcraft/pull/231): `options.watermark: "draft"` im Body aller vier POST-Endpunkte |
+| R3 | Versionsauskunft (`GET /version` bzw. Header mit App- und Template-Version) | Render-Snapshot, Nachvollziehbarkeit | Image-Digest aus der Konfiguration | [pdfcraft#216](https://github.com/maltinapro/pdfcraft/issues/216) | ✔ [pdfcraft#232](https://github.com/maltinapro/pdfcraft/pull/232): `GET /v1/version` (ohne Token): Version, Commit, Typst, `templateHash`, `templates.<typ>`; Header `X-Pdfcraft-Version` an jeder Antwort |
+| R4 | Garantiert deterministische Ausgabe (gleiche Eingabe + Version → gleiche Bytes) inkl. Test | Hash-Prüfung, Reproduzierbarkeit (E07-11) | eigener Test in FediFinance | [pdfcraft#217](https://github.com/maltinapro/pdfcraft/issues/217) | ✔ [pdfcraft#233](https://github.com/maltinapro/pdfcraft/pull/233): Tests über alle Belegarten × Designs, auch prozessübergreifend; nur linux/amd64 geprüft; Grenzen in `docs/09-api-reference.md` |
+| R5 | Belegart Mahnung (Bezug auf offene Rechnungen, Gebühren, Zinsen) | Mahnwesen (E09) | Brief-Belegart mit Text | [pdfcraft#218](https://github.com/maltinapro/pdfcraft/issues/218) | ✔ [pdfcraft#234](https://github.com/maltinapro/pdfcraft/pull/234): `type: "dunning"`; Zinsen übergeben oder nach § 288 BGB aus der Basiszinstabelle berechnet (Anhang `dunning-interest.json`); nur API |
+| R6 | Berichts-/Tabellendokument (Journal, Summen-/Saldenliste, BWA, Verfahrensdokumentation, Prüfer-Export-Deckblatt) | Auswertungen als PDF | eigene Typst-Vorlage in FediFinance prüfen | [pdfcraft#219](https://github.com/maltinapro/pdfcraft/issues/219) | ✔ [pdfcraft#235](https://github.com/maltinapro/pdfcraft/pull/235): `type: "report"`; max. 20 Tabellen, 12 Spalten, 10 000 Zeilen (längere Journale aufteilen); Gruppenüberschrift kann allein am Seitenende stehen |
+| R7 | Zustandsloser Endpunkt „E-Rechnung parsen/prüfen" (PDF/XML → normalisiertes JSON + Prüfergebnis) | Eingangsrechnungen serverseitig mit derselben Logik wie der Viewer | eigener Rust-Parser (E07-10) | [pdfcraft#220](https://github.com/maltinapro/pdfcraft/issues/220) | ✔ [pdfcraft#236](https://github.com/maltinapro/pdfcraft/pull/236): `POST /v1/einvoices/parse` (PDF ≤ 20 MB, XML ≤ 5 MB), Parität zum Viewer über Golden-Tests; Plausibilitätsprüfung, keine XSD-/Schematron-Validierung |
+| R8 | Papier-Editor als Paket mit austauschbarer Datenquelle | Frontend-Strategie C | Portierung mit Herkunftsvermerk | [pdfcraft#221](https://github.com/maltinapro/pdfcraft/issues/221) | ✔ [pdfcraft#237](https://github.com/maltinapro/pdfcraft/pull/237): `@pdfcraft/editor` 0.2.0 (nur TS-Quellen), Adapter dokumentiert, von PDFCraft selbst genutzt; **noch nicht veröffentlicht** ([pdfcraft#243](https://github.com/maltinapro/pdfcraft/issues/243)) |
+| R9 | Design-System als Paket (Tokens, `ui`, Icons) | Drift vermeiden | Kopie + Drift-Check (E03-10) | [pdfcraft#222](https://github.com/maltinapro/pdfcraft/issues/222) | ✔ [pdfcraft#238](https://github.com/maltinapro/pdfcraft/pull/238): `@pdfcraft/design` 0.1.0 mit Changelog und Kontrasttest, von PDFCraft selbst genutzt; **noch nicht veröffentlicht** ([pdfcraft#243](https://github.com/maltinapro/pdfcraft/issues/243)) |
+| R10 | Strukturierter Fuß (Kontakt / Bank / Steuer- und Registerdaten) über die API (PDFCraft E11-05) | Pflichtangaben auf Geschäftsbriefen (§ 37a HGB, § 35a GmbHG) aus Stammdaten | freier Fußtext aus Stammdaten generiert | [pdfcraft#223](https://github.com/maltinapro/pdfcraft/issues/223) | ✔ [pdfcraft#239](https://github.com/maltinapro/pdfcraft/pull/239): `settings.footerMode: "structured"` + `sender.legalForm`, `registeredOffice`, `registerCourt`, `registerNumber`, `managingDirectors`, `supervisoryBoardChair`; Beschriftungen rechtlich ungeprüft ([#45](https://github.com/maltinapro/fedi-finance/issues/45)) |
+| R11 | Produktions-Helm-Chart oder Chart-Bausteine | Einbindung in das FediFinance-Chart | eigene Templates im FediFinance-Chart | [pdfcraft#224](https://github.com/maltinapro/pdfcraft/issues/224) | ✔ [pdfcraft#240](https://github.com/maltinapro/pdfcraft/pull/240): `values-production.yaml` (nur `/v1`, HPA, PDB, NetworkPolicy, ServiceMonitor, bestehende Secrets), `fullnameOverride`; OCI-Chart wird beim Release veröffentlicht |
 
 ## 8. Offene Punkte
 
 - Geteiltes oder mandanteneigenes PDFCraft-Deployment (Abschnitt 4) – Vorschlag: geteilt.
-- Editor-Paket (C) vs. Portierung (D) für den Editor – Entscheidung in E07-01.
-- Berichte (R6) in PDFCraft oder eigene Vorlagen – Entscheidung in E07-09.
+- Editor-Paket (C) vs. Portierung (D) für den Editor – Entscheidung in E07-01; `@pdfcraft/editor` existiert, ist
+  aber noch nicht veröffentlicht (pdfcraft#243).
+- Berichte (R6) in PDFCraft oder eigene Vorlagen – Entscheidung in E07-09; PDFCraft bietet `report` (max. 10 000 Zeilen).
+- PDFCraft-Release mit R1–R11 abwarten (pdfcraft#244), dann Dev-Umgebung (`deploy/dev/compose.yaml`) und Chart auf
+  diese Version heben und die Ersatzlösungen aus Abschnitt 7 entfernen.
 - Pflichtangaben auf Geschäftsbriefen und Rechnungen von Steuerberatung/Rechtsberatung prüfen lassen.
