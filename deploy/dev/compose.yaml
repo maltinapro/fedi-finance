@@ -63,7 +63,7 @@ services:
 
   pdfcraft:
     # Pinned version, keep in sync with docs/pdfcraft.md and the Helm chart
-    image: ghcr.io/maltinapro/pdfcraft-backend:${PDFCRAFT_VERSION:-0.31.0}
+    image: ghcr.io/maltinapro/pdfcraft-backend:${PDFCRAFT_VERSION:-0.34.0}
     environment:
       VALKEY_URL: redis://valkey:6379
       # Tokens without watermark are "purchased" tokens; Mollie, checkout and Anubis stay off

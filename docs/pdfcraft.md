@@ -5,8 +5,8 @@ Gestaltung (Material Design 3, siehe [design.md](design.md)). PDFCraft bleibt ei
 es speichert keine Kunden- oder Belegdaten. Speichern, Nummerieren, Festschreiben, Archivieren, Versenden und Buchen
 übernimmt FediFinance.
 
-Geprüfter Stand: PDFCraft `main` @ `6fbc2e6` (21.11.2026; R1–R11 umgesetzt, aber noch in keinem Release – letztes Release
-`v0.32.0`, siehe [Abschnitt 7](#7-anforderungen-an-pdfcraft-upstream)). Bei neuen PDFCraft-Versionen diesen Abschnitt und die
+Geprüfter Stand: PDFCraft-Release `v0.34.0` (`c6f3f1f`, 22.11.2026; enthält R1–R11, npm-Pakete veröffentlicht, siehe
+[Abschnitt 7](#7-anforderungen-an-pdfcraft-upstream)). Bei neuen PDFCraft-Versionen diesen Abschnitt und die
 Anforderungsliste ([Abschnitt 7](#7-anforderungen-an-pdfcraft-upstream)) aktualisieren.
 
 ## 1. Was PDFCraft heute kann
@@ -22,8 +22,8 @@ Anforderungsliste ([Abschnitt 7](#7-anforderungen-an-pdfcraft-upstream)) aktuali
 | Reproduzierbarkeit | Byte-identische PDFs bei gleicher Eingabe und gleichem Build, abgesichert durch Tests über alle Belegarten × Designs (auch prozessübergreifend); Grenzen (Version, Typst, Schriften, Plattform) in `docs/09-api-reference.md` | Hash-Prüfung und Neu-Rendern aus dem Snapshot (E07-11) |
 | Vorschau | `?zones=1` liefert im Header `X-Pdfcraft-Zones` die Geometrie der Zonen 3/4 (mm, Seite) für die klickbare Vorschau | Papier-Editor mit Zonen-Overlay |
 | Leistung | typ. 5–12 ms je Rechnung (3 Positionen), Compile-Queue mit Lastabwurf (`503 server_busy` + `Retry-After`), Rate-Limit je Token (`429` + `Retry-After`) | Synchrone Vorschau, Bulk über Jobs |
-| Frontend | React 19 + Vite + TS, ohne UI-Bibliothek; Design-System als Workspace-Paket `@pdfcraft/design` (`frontend/packages/design`: `tokens.css` + Kontrasttest, `ui.css`, `ui`-Komponenten, Icons, `theme.ts`, Changelog), Inter (self-hosted), Hell/Dunkel/System, hoher Kontrast, `tr(de, en)` | Basis des FediFinance-Frontends ([Abschnitt 6](#6-frontend-strategie)) |
-| Editor | Papier-Editor als Paket `@pdfcraft/editor` (`frontend/packages/editor`, `PaperEditor` mit Adapter: `render` Pflicht, Kunden/Artikel/Porto/XML optional; Dokument und Einstellungen als Props) mit vier Zonen (Absender & Aussehen, Empfänger, Details, Positionen), Stepper, Klick auf das PDF öffnet die Felder, Splitter (Desktop) bzw. Formular/Vorschau-Tabs (mobil), Positionskarten mit Zeilensumme, Hinweisliste | Belegeditor (E07-06) |
+| Frontend | React 19 + Vite + TS, ohne UI-Bibliothek; Design-System als Paket `@maltinapro/pdfcraft-design` (`frontend/packages/design`: `tokens.css` + Kontrasttest, `ui.css`, `ui`-Komponenten, Icons, `theme.ts`, Changelog), Inter (self-hosted), Hell/Dunkel/System, hoher Kontrast, `tr(de, en)` | Basis des FediFinance-Frontends ([Abschnitt 6](#6-frontend-strategie)) |
+| Editor | Papier-Editor als Paket `@maltinapro/pdfcraft-editor` (`frontend/packages/editor`, `PaperEditor` mit Adapter: `render` Pflicht, Kunden/Artikel/Porto/XML optional; Dokument und Einstellungen als Props) mit vier Zonen (Absender & Aussehen, Empfänger, Details, Positionen), Stepper, Klick auf das PDF öffnet die Felder, Splitter (Desktop) bzw. Formular/Vorschau-Tabs (mobil), Positionskarten mit Zeilensumme, Hinweisliste | Belegeditor (E07-06) |
 | Weitere | Stammdaten Kunden/Artikel, Belegarchiv mit ZIP-Download und Folgebelegen, E-Rechnungs-Viewer und Plausibilitätsprüfung (CII/UBL, im Browser und per `/v1/einvoices/parse`, Parität über Golden-Tests), Leistungsdatum/-zeitraum und Fälligkeit, Internetmarke (optional, standardmäßig aus), Prometheus-Metriken + Grafana-Dashboards, Helm-Chart mit `values-production.yaml` (nur `/v1`, HPA, PDB, NetworkPolicy, ServiceMonitor, OCI `oci://ghcr.io/maltinapro/charts/pdfcraft`) | Vorbild für Stammdaten, Archiv, Eingangsrechnungen, Betrieb |
 | Nicht vorhanden | Serverseitige Speicherung (alles liegt im Browser bzw. in einer JSON-Sicherung), Benutzer/Rollen, Nummernkreise, Buchhaltung, Mahnlauf/offene Posten; Mahnung und Bericht nur per API (kein Editor) | → Aufgabe von FediFinance bzw. Anforderungen (Abschnitt 7) |
 
@@ -97,14 +97,19 @@ fehl, wird zurückgerollt (keine Lücke, kein Beleg ohne PDF). Details in E06-04
 ## 4. Betrieb
 
 - **Image:** `ghcr.io/maltinapro/pdfcraft-backend:<version>` (Release-Workflow von PDFCraft), Version im
-  FediFinance-Chart gepinnt (Dev-Umgebung: `deploy/dev/compose.yaml`, derzeit `0.31.0`); Upgrade nur mit grünem Contract-Test (E07-02).
+  FediFinance-Chart gepinnt (Dev-Umgebung: `deploy/dev/compose.yaml`, derzeit `0.34.0`); Upgrade nur mit grünem Contract-Test (E07-02).
+- **Frontend-Pakete:** `@maltinapro/pdfcraft-design` und `@maltinapro/pdfcraft-editor` liegen öffentlich in GitHub
+  Packages (`https://npm.pkg.github.com`). Für die Installation (lokal, CI, Renovate) braucht npm trotzdem ein Token mit
+  `read:packages` (klassisches PAT; in GitHub Actions `GITHUB_TOKEN`, wenn das Paket dem Repo Lesezugriff gibt):
+  `.npmrc` mit `@maltinapro:registry=https://npm.pkg.github.com` und
+  `//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}`. Die Pakete enthalten TypeScript-Quellen (Vite kompiliert sie).
 - **Valkey:** Paid-/Free-Tokens und das gemeinsame Rate-Limit brauchen Valkey (Token-Hashes, Rate-Limit; keine
   Kundendaten). Mit statischen Dienst-Tokens (R1) läuft `/v1` auch ohne Valkey; das Rate-Limit gilt dann je Replika.
 - **Token:** je Mandant ein statisches Dienst-Token ohne Ablauf und ohne Wasserzeichen
   (`pdfcraft-backend tokens create-service <mandant> --limit <n>`); PDFCraft erhält nur den SHA-256-Hash über
   `SERVICE_TOKENS_FILE` (Chart: `backend.serviceTokensSecret`), FediFinance das Klartext-Token als Kubernetes-Secret
-  (Provisioning E12-07). Mollie/Kauf/Anubis bleiben aus. Bis zum PDFCraft-Release mit R1 (pdfcraft#244):
-  Paid-Token mit langer Laufzeit (`tokens create --plan <plan> --days <n>`, `PAID_TOKENS_ENABLED=true`) + Rotation.
+  (Provisioning E12-07). Mollie/Kauf/Anubis bleiben aus. Die Dev-Umgebung nutzt noch ein Paid-Token
+  (`tokens create --plan starter --days 365`, `PAID_TOKENS_ENABLED=true`); Umstellung auf Dienst-Tokens mit E07-02/E12-07.
 - **Deployment-Varianten** (Entscheidung in E07-01/E12-12):
 
 | Variante | Vorteile | Nachteile |
@@ -138,20 +143,21 @@ Frage: PDFCraft-Frontend kopieren oder neu schreiben?
 | --- | --- |
 | A. Ganzes PDFCraft-Frontend kopieren (Fork) | **Nein.** Etwa die Hälfte ist PDFCraft-spezifisch (localStorage-Persistenz, Browser-Sicherung, Free-Token/Anubis, Kaufseite, Landing-/SEO-Seiten); zwei auseinanderlaufende Kopien des Editors. |
 | B. PDFCraft-App einbetten (iframe/Link) | **Nein.** Eigene Anmeldung, Daten im Browser statt in FediFinance, kein GoBD-Ablauf, uneinheitliche Bedienung. |
-| C. Gemeinsame Pakete aus PDFCraft (`ui`: Tokens, Komponenten, Icons; `editor`: Papier-Editor mit austauschbarer Datenquelle) | **Ziel.** Beide Produkte profitieren von Fixes; erfordert Umbau in PDFCraft (Workspace, Speicher-Adapter statt localStorage, Veröffentlichung z. B. GitHub Packages). |
+| C. Gemeinsame Pakete aus PDFCraft (`ui`: Tokens, Komponenten, Icons; `editor`: Papier-Editor mit austauschbarer Datenquelle) | **Ziel, jetzt verfügbar.** Beide Produkte profitieren von Fixes; PDFCraft veröffentlicht `@maltinapro/pdfcraft-design` 0.1.0 und `@maltinapro/pdfcraft-editor` 0.2.0 in GitHub Packages und nutzt sie selbst. |
 | D. Neues FediFinance-Frontend mit gleichem Stack, Design-Fundament übernommen, Editor portiert | **Start.** Sofort machbar, volle Freiheit für Buchhaltungsseiten. |
 
 **Empfehlung (D → C):**
 
-1. **E03 – Design-Fundament übernehmen (kopieren):** `tokens.css` (+ Kontrasttest), `components/ui/*`, `ui.css`,
-   `icons.tsx`, `theme.ts`, Inter-Einbindung aus einem gepinnten PDFCraft-Commit nach `frontend/src/design/`
-   (Herkunft in `UPSTREAM.md`, Drift-Check in CI, E03-10). Klein (~600 Zeilen), stabil, MIT.
+1. **E03 – Design-Fundament übernehmen:** Seit PDFCraft `v0.34.0` bevorzugt als Abhängigkeit
+   `@maltinapro/pdfcraft-design` (Tokens + Kontrasttest, `ui`-Komponenten, `ui.css`, Icons, `theme.ts`; Updates per
+   Renovate). Fallback: Kopie aus einem gepinnten PDFCraft-Commit nach `frontend/src/design/` (Herkunft in
+   `UPSTREAM.md`, Drift-Check in CI, E03-10). Entscheidung in E03-10.
 2. **E03 – Shell und Seiten neu:** App-Shell, Navigation, Tabellen, Buchhaltungsseiten, Auth und Rollen sind
    FediFinance-spezifisch und werden nach [design.md](design.md) neu gebaut – mit denselben Komponenten.
-3. **E07 – Editor:** Bevorzugt extrahiert PDFCraft seinen Papier-Editor als Paket mit Props/Callbacks
-   (`loadDraft`, `saveDraft`, `renderPreview → { pdf, zones }`, Stammdaten-Picker) (R8, R9); PDFCraft nutzt es mit
-   localStorage, FediFinance mit seiner API. Bis dahin wird der Editor mit Herkunftsvermerk portiert und die Daten-
-   schicht ersetzt. Entscheidung in E07-01 (beide Repos gehören demselben Owner, Option C ist realistisch).
+3. **E07 – Editor:** Bevorzugt `@maltinapro/pdfcraft-editor` (R8): `PaperEditor` mit Adapter (`render(request, signal)
+   → { blob, zones }` Pflicht; Kunden/Artikel als `EntrySource`, Porto, XML-Extraktion optional), Dokument und
+   Einstellungen als Props; PDFCraft nutzt es mit localStorage, FediFinance mit seiner API (`render` über den
+   Vorschau-Proxy E07-05). Fallback: Portierung mit Herkunftsvermerk. Entscheidung in E07-01.
 4. Ebenfalls übernehmbar: E-Rechnungs-Viewer (`lib/einvoice/`: Extraktion, CII/UBL-Parser, Plausibilitätsprüfung),
    `validate.ts`-Logik (als Vorab-Hinweise), Screenshot-Skript (Playwright-Matrix).
 
@@ -161,10 +167,14 @@ Werkzeuge im Frontend wie in PDFCraft (npm, Vite, Vitest, oxlint, TypeScript), d
 
 Angelegt als Issues in `maltinapro/pdfcraft` (Label `enhancement`, 11/2026, E07-14); Status hier pflegen.
 
-Stand 21.11.2026 (PDFCraft `main` @ `6fbc2e6`): **alle Anforderungen umgesetzt** (PRs [pdfcraft#230](https://github.com/maltinapro/pdfcraft/pull/230)–[pdfcraft#240](https://github.com/maltinapro/pdfcraft/pull/240), CI grün). Sie
-sind aber noch in keinem Release (letztes Release `v0.32.0` vom 19.11.2026) → [pdfcraft#244](https://github.com/maltinapro/pdfcraft/issues/244). Die npm-Pakete (R8, R9) lassen
-sich mit dem Scope `@pdfcraft` nicht aus `maltinapro/pdfcraft` in GitHub Packages veröffentlichen → [pdfcraft#243](https://github.com/maltinapro/pdfcraft/issues/243). Bis dahin
-gilt die Spalte „Ersatz bis dahin".
+Stand 22.11.2026: **alle Anforderungen umgesetzt und released** (PRs [pdfcraft#230](https://github.com/maltinapro/pdfcraft/pull/230)–[pdfcraft#240](https://github.com/maltinapro/pdfcraft/pull/240); Release [`v0.33.0`](https://github.com/maltinapro/pdfcraft/releases/tag/v0.33.0) bzw. aktuell
+[`v0.34.0`](https://github.com/maltinapro/pdfcraft/releases/tag/v0.34.0), [pdfcraft#244](https://github.com/maltinapro/pdfcraft/issues/244)). Image `ghcr.io/maltinapro/pdfcraft-backend:0.34.0`
+(amd64 + arm64), OCI-Chart `oci://ghcr.io/maltinapro/charts/pdfcraft` `0.34.0` und die npm-Pakete
+`@maltinapro/pdfcraft-design` 0.1.0 / `@maltinapro/pdfcraft-editor` 0.2.0 ([pdfcraft#243](https://github.com/maltinapro/pdfcraft/issues/243)) sind veröffentlicht.
+Geprüft mit einem Smoke-Test des Release-Images (Dienst-Token ohne Valkey, `/v1/version`, `X-Pdfcraft-Version`,
+„Entwurf", strukturierter Fuß, `dunning`, `report`, `/v1/einvoices/parse`, gleiche Bytes nach Neustart) und
+`make dev-check` mit `0.34.0`. Kleinere Nacharbeiten (Paket-Tags, Testdateien im Editor-Paket, Release-Notes 0.34.0):
+[pdfcraft#251](https://github.com/maltinapro/pdfcraft/issues/251). Die Spalte „Ersatz bis dahin" ist nur noch Fallback.
 
 | ID | Anforderung | Warum | Ersatz bis dahin | Issue | Status / Umsetzung |
 | --- | --- | --- | --- | --- | --- |
@@ -175,17 +185,17 @@ gilt die Spalte „Ersatz bis dahin".
 | R5 | Belegart Mahnung (Bezug auf offene Rechnungen, Gebühren, Zinsen) | Mahnwesen (E09) | Brief-Belegart mit Text | [pdfcraft#218](https://github.com/maltinapro/pdfcraft/issues/218) | ✔ [pdfcraft#234](https://github.com/maltinapro/pdfcraft/pull/234): `type: "dunning"`; Zinsen übergeben oder nach § 288 BGB aus der Basiszinstabelle berechnet (Anhang `dunning-interest.json`); nur API |
 | R6 | Berichts-/Tabellendokument (Journal, Summen-/Saldenliste, BWA, Verfahrensdokumentation, Prüfer-Export-Deckblatt) | Auswertungen als PDF | eigene Typst-Vorlage in FediFinance prüfen | [pdfcraft#219](https://github.com/maltinapro/pdfcraft/issues/219) | ✔ [pdfcraft#235](https://github.com/maltinapro/pdfcraft/pull/235): `type: "report"`; max. 20 Tabellen, 12 Spalten, 10 000 Zeilen (längere Journale aufteilen); Gruppenüberschrift kann allein am Seitenende stehen |
 | R7 | Zustandsloser Endpunkt „E-Rechnung parsen/prüfen" (PDF/XML → normalisiertes JSON + Prüfergebnis) | Eingangsrechnungen serverseitig mit derselben Logik wie der Viewer | eigener Rust-Parser (E07-10) | [pdfcraft#220](https://github.com/maltinapro/pdfcraft/issues/220) | ✔ [pdfcraft#236](https://github.com/maltinapro/pdfcraft/pull/236): `POST /v1/einvoices/parse` (PDF ≤ 20 MB, XML ≤ 5 MB), Parität zum Viewer über Golden-Tests; Plausibilitätsprüfung, keine XSD-/Schematron-Validierung |
-| R8 | Papier-Editor als Paket mit austauschbarer Datenquelle | Frontend-Strategie C | Portierung mit Herkunftsvermerk | [pdfcraft#221](https://github.com/maltinapro/pdfcraft/issues/221) | ✔ [pdfcraft#237](https://github.com/maltinapro/pdfcraft/pull/237): `@pdfcraft/editor` 0.2.0 (nur TS-Quellen), Adapter dokumentiert, von PDFCraft selbst genutzt; **noch nicht veröffentlicht** ([pdfcraft#243](https://github.com/maltinapro/pdfcraft/issues/243)) |
-| R9 | Design-System als Paket (Tokens, `ui`, Icons) | Drift vermeiden | Kopie + Drift-Check (E03-10) | [pdfcraft#222](https://github.com/maltinapro/pdfcraft/issues/222) | ✔ [pdfcraft#238](https://github.com/maltinapro/pdfcraft/pull/238): `@pdfcraft/design` 0.1.0 mit Changelog und Kontrasttest, von PDFCraft selbst genutzt; **noch nicht veröffentlicht** ([pdfcraft#243](https://github.com/maltinapro/pdfcraft/issues/243)) |
+| R8 | Papier-Editor als Paket mit austauschbarer Datenquelle | Frontend-Strategie C | Portierung mit Herkunftsvermerk | [pdfcraft#221](https://github.com/maltinapro/pdfcraft/issues/221) | ✔ [pdfcraft#237](https://github.com/maltinapro/pdfcraft/pull/237): `@maltinapro/pdfcraft-editor` 0.2.0 (nur TS-Quellen, hängt von `pdfcraft-design` ab), Adapter dokumentiert, von PDFCraft selbst genutzt; veröffentlicht in GitHub Packages ([pdfcraft#243](https://github.com/maltinapro/pdfcraft/issues/243)) |
+| R9 | Design-System als Paket (Tokens, `ui`, Icons) | Drift vermeiden | Kopie + Drift-Check (E03-10) | [pdfcraft#222](https://github.com/maltinapro/pdfcraft/issues/222) | ✔ [pdfcraft#238](https://github.com/maltinapro/pdfcraft/pull/238): `@maltinapro/pdfcraft-design` 0.1.0 mit Changelog und Kontrasttest, von PDFCraft selbst genutzt; veröffentlicht in GitHub Packages ([pdfcraft#243](https://github.com/maltinapro/pdfcraft/issues/243)) |
 | R10 | Strukturierter Fuß (Kontakt / Bank / Steuer- und Registerdaten) über die API (PDFCraft E11-05) | Pflichtangaben auf Geschäftsbriefen (§ 37a HGB, § 35a GmbHG) aus Stammdaten | freier Fußtext aus Stammdaten generiert | [pdfcraft#223](https://github.com/maltinapro/pdfcraft/issues/223) | ✔ [pdfcraft#239](https://github.com/maltinapro/pdfcraft/pull/239): `settings.footerMode: "structured"` + `sender.legalForm`, `registeredOffice`, `registerCourt`, `registerNumber`, `managingDirectors`, `supervisoryBoardChair`; Beschriftungen rechtlich ungeprüft ([#45](https://github.com/maltinapro/fedi-finance/issues/45)) |
-| R11 | Produktions-Helm-Chart oder Chart-Bausteine | Einbindung in das FediFinance-Chart | eigene Templates im FediFinance-Chart | [pdfcraft#224](https://github.com/maltinapro/pdfcraft/issues/224) | ✔ [pdfcraft#240](https://github.com/maltinapro/pdfcraft/pull/240): `values-production.yaml` (nur `/v1`, HPA, PDB, NetworkPolicy, ServiceMonitor, bestehende Secrets), `fullnameOverride`; OCI-Chart wird beim Release veröffentlicht |
+| R11 | Produktions-Helm-Chart oder Chart-Bausteine | Einbindung in das FediFinance-Chart | eigene Templates im FediFinance-Chart | [pdfcraft#224](https://github.com/maltinapro/pdfcraft/issues/224) | ✔ [pdfcraft#240](https://github.com/maltinapro/pdfcraft/pull/240): `values-production.yaml` (nur `/v1`, HPA, PDB, NetworkPolicy, ServiceMonitor, bestehende Secrets), `fullnameOverride`; OCI-Chart ab `0.33.0` |
 
 ## 8. Offene Punkte
 
 - Geteiltes oder mandanteneigenes PDFCraft-Deployment (Abschnitt 4) – Vorschlag: geteilt.
-- Editor-Paket (C) vs. Portierung (D) für den Editor – Entscheidung in E07-01; `@pdfcraft/editor` existiert, ist
-  aber noch nicht veröffentlicht (pdfcraft#243).
+- Editor-Paket (C) vs. Portierung (D) für den Editor – Entscheidung in E07-01; `@maltinapro/pdfcraft-editor` ist
+  veröffentlicht, Empfehlung: Paket (Adapter bisher nur von PDFCraft selbst genutzt).
 - Berichte (R6) in PDFCraft oder eigene Vorlagen – Entscheidung in E07-09; PDFCraft bietet `report` (max. 10 000 Zeilen).
-- PDFCraft-Release mit R1–R11 abwarten (pdfcraft#244), dann Dev-Umgebung (`deploy/dev/compose.yaml`) und Chart auf
-  diese Version heben und die Ersatzlösungen aus Abschnitt 7 entfernen.
+- Dev-Umgebung auf Dienst-Tokens umstellen und PDFCraft-Chart (OCI) im FediFinance-Chart einbinden (E07-02, E12-07);
+  Token für GitHub Packages in CI/Renovate bereitstellen, sobald das Frontend die Pakete nutzt (E03-10).
 - Pflichtangaben auf Geschäftsbriefen und Rechnungen von Steuerberatung/Rechtsberatung prüfen lassen.

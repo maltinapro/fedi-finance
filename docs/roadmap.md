@@ -4,7 +4,7 @@ Status: `offen` · `in Arbeit` · `fertig`. Nach jedem abgeschlossenen Epic/Issu
 
 GitHub-Issues werden **phasenweise** angelegt (Epic-Issue + Sub-Issues je Task, Labels `epic`/`task`/`phase-N`).
 Angelegt: Phase 0 (E00 #2, E01 #11, E02 #22, E03 #32 inkl. E03-10 #44); vorab Rechtsprüfung der Pflichtangaben #45 (`phase-1`).
-Upstream-Anforderungen an PDFCraft (E07-14, erledigt): maltinapro/pdfcraft#214–#224, upstream umgesetzt (Release ausstehend: maltinapro/pdfcraft#244), siehe [pdfcraft.md](pdfcraft.md#7-anforderungen-an-pdfcraft-upstream). Phasen 1–4 folgen, sobald die vorherige Phase abgeschlossen ist.
+Upstream-Anforderungen an PDFCraft (E07-14, erledigt): maltinapro/pdfcraft#214–#224, upstream umgesetzt und mit PDFCraft `v0.34.0` released, siehe [pdfcraft.md](pdfcraft.md#7-anforderungen-an-pdfcraft-upstream). Phasen 1–4 folgen, sobald die vorherige Phase abgeschlossen ist.
 
 ## Grundlagen aus PDFCraft
 

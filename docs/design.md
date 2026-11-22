@@ -9,6 +9,8 @@ selben PR dokumentiert.
 
 Umsetzung: Fundament und Shell in [E03](epics/E03-frontend.md), Belegeditor und PDF-Designs in
 [E07](epics/E07-pdf-e-rechnung.md). Herkunft und Abgleich des übernommenen Codes: [pdfcraft.md](pdfcraft.md#6-frontend-strategie).
+Die Spalte „Ort in FediFinance" beschreibt die Kopie; bei Nutzung des Pakets `@maltinapro/pdfcraft-design` (E03-10)
+kommen dieselben Dateien aus dem Paket.
 
 ## 1. Übernommen (unverändert)
 

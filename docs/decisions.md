@@ -37,7 +37,7 @@
 
 ## Offene Fragen
 
-1. ~~**PDFCraft-Schnittstelle**~~ – geklärt (11/2026): REST-API `/v1` (OpenAPI 3.1), PDF/A-3b mit eingebettetem EN-16931-/XRechnung-XML, Token-Auth, zustandslos. Offen bleiben Deployment-Variante und Editor-Paket; die Anforderungen R1–R11 sind upstream umgesetzt, das Release steht aus ([pdfcraft.md](pdfcraft.md#7-anforderungen-an-pdfcraft-upstream)). (E07)
+1. ~~**PDFCraft-Schnittstelle**~~ – geklärt (11/2026): REST-API `/v1` (OpenAPI 3.1), PDF/A-3b mit eingebettetem EN-16931-/XRechnung-XML, Token-Auth, zustandslos. Offen bleiben Deployment-Variante und Editor-Paket; die Anforderungen R1–R11 sind upstream umgesetzt und mit PDFCraft `v0.34.0` released ([pdfcraft.md](pdfcraft.md#7-anforderungen-an-pdfcraft-upstream)). (E07)
 2. **ActivityPub in Rust**: vorhandene Bibliothek (z. B. `activitypub_federation`) oder Eigenbau? (E05)
 3. **Bankanbindung** mit Open-Source-Mitteln: FinTS/HBCI vs. PSD2-Aggregator; kommerzielle Aggregatoren wären kein OSS. (E10)
 4. **ELSTER/UStVA**: Die offizielle ERiC-Bibliothek ist nicht quelloffen – Umgang (Export-XML + manuelle Übermittlung vs. ERiC-Integration). (E09)
@@ -56,6 +56,7 @@
 - 11/2026: PDFCraft geprüft (Stand `00c5e04`): Anbindung per REST, Material Design 3 und Design-System aus PDFCraft übernommen, Frontend-Strategie festgelegt; E03, E07 überarbeitet, E04/E06/E12 ergänzt.
 - 11/2026: Phase-0-Issues mit den Epics abgeglichen, E03-10 als #44 angelegt, Anforderungen R1–R11 als maltinapro/pdfcraft#214–#224, Rechtsprüfung als #45.
 - 21.11.2026: PDFCraft erneut geprüft (Stand `6fbc2e6`): R1–R11 umgesetzt (maltinapro/pdfcraft#230–#240), aber noch nicht released (maltinapro/pdfcraft#244); Veröffentlichung der npm-Pakete `@pdfcraft/design`/`@pdfcraft/editor` blockiert (maltinapro/pdfcraft#243).
+- 22.11.2026: PDFCraft `v0.34.0` geprüft: Image, OCI-Chart und npm-Pakete (umbenannt in `@maltinapro/pdfcraft-design`/`@maltinapro/pdfcraft-editor`, GitHub Packages) veröffentlicht; Smoke-Test der neuen Endpunkte erfolgreich; Dev-Umgebung auf `0.34.0` gehoben; Nacharbeiten in maltinapro/pdfcraft#251.
 - 11/2026: E00 umgesetzt: Monorepo-Skelett, CI, Dev-Umgebung (`make dev`), Prettier ergänzt; SeaweedFS statt MinIO in der Dev-Umgebung; Lizenz-/Namensfragen dokumentiert.
 - 11/2026: Archiv-Storage geklärt (Konzept): GoBD verlangt kein bestimmtes Medium; Ceph (CephFS/RBD/RGW) ist geeignet, Unveränderbarkeit über Hash-Adressierung, Write-once und S3 Object Lock; keine PDFs in der DB. E08-01, E11-03, E12-04, compliance.md ergänzt; Rückfrage als Nr. 12.
 - 11/2026: Frage 12 geklärt: freie Wahl der Storage-Software im Cluster; Vorschlag Rook-Ceph (RGW + Object Lock), Alternativen nach Clustergröße.
