@@ -20,7 +20,7 @@ Verwaltung der eigenen Unternehmensstammdaten und der Geschäftspartner (lokal a
 - [ ] **E04-05 Stammdaten-Versionierung** – Historie, Gültigkeitszeiträume (Beleg verwendet Stand zum Belegdatum). AK: Änderung verändert alte Belege nicht.
 - [ ] **E04-06 Sichtbarkeitsstufen** – Je Feld: öffentlich/Partner/privat für die Föderation. AK: Default datensparsam.
 - [ ] **E04-07 USt-IdNr.-Prüfung** – Validierung (Format, optional VIES-Abfrage). AK: Ergebnis protokolliert.
-- [ ] **E04-08 Import/Export** – CSV-Import von Partnern, Duplikaterkennung. AK: Fehlerreport.
+- [ ] **E04-08 Import/Export** – CSV-Import von Partnern, Duplikaterkennung (Basis für den Umstieg aus anderen Programmen, [E20](E20-steuerberatung-umstieg.md)). AK: Fehlerreport.
 - [ ] **E04-09 Mehrere Unternehmen/Mandanten-Einheiten** – (optional) mehrere Buchungskreise je Instanz. AK: Entscheidung dokumentiert.
 - [ ] **E04-10 Artikel/Leistungen** – Artikelstamm wie in PDFCraft (Bezeichnung, Einheit, Preis, Steuersatz) plus Erlöskonto; Auswahl im Belegeditor (E07-06). AK: CRUD, Suche, Tests.
 - [ ] **E04-11 Import aus PDFCraft-Sicherung** – `pdfcraft-backup-<datum>.json` (`backupVersion` 2; auch Version 1) einlesen: Absender/Erscheinungsbild → Unternehmen, Kunden → Partner, Artikel → Artikelstamm; ausgestellte Belege optional als Altbelege (nicht nachträglich gebucht). AK: Vorschau mit Duplikaterkennung vor dem Import; Testdatei aus PDFCraft.
