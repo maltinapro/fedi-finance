@@ -9,7 +9,7 @@ Server tauschen Stammdaten und Belege (z. B. Rechnungen) über **ActivityPub** a
 
 ## Kernideen
 
-- **Föderation**: Geschäftspartner werden über ihre Domain (z. B. `f1.com`) gefunden und verknüpft.
+- **Föderation**: Geschäftspartner werden über ihre Domain (z. B. `f1.com`) gefunden und verknüpft; Partner ohne FediFinance erreicht später optional Peppol ([docs/peppol.md](docs/peppol.md)).
 - **GoBD & DSGVO**: revisionssichere Buchführung, Datensparsamkeit; PDFs und E-Rechnungen (ZUGFeRD/XRechnung) erzeugt
   [PDFCraft](https://github.com/maltinapro/pdfcraft) per REST, FediFinance speichert und archiviert sie.
 - **Gestaltung**: Material Design 3 mit dem Design-System und Belegeditor von PDFCraft.

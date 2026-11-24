@@ -33,6 +33,7 @@
 | Offsite-Backup-Ziel | S3 mit Object Lock und Versioning, anderer Standort/Anbieter in der EU; Referenz SeaweedFS (Object Lock getestet), Garage/MinIO scheiden aus; bestätigen mit dem Test aus E13-01 | E13 |
 | Dokumentenspeicher | **S3 only, provider-neutral:** zwei Buckets je Mandant, `data` (aktuelle Daten) und `archive` (Object Lock, hash-adressiert); Zugangsdaten als Secret im Mandanten-Namespace per Operator/Provisioner; kein PVC-Backend für Dokumente ([storage.md](storage.md)) | E08, E12 |
 | Cluster-Storage | Rook-Ceph (min. 3 Nodes, Replikation 3): RBD für PVCs, RGW als S3-Dienst; für die Anwendung irrelevant ([storage.md](storage.md#6-cluster-storage-rook-ceph)) | E12 |
+| Peppol | Optionale Brücke neben ActivityPub für Partner ohne FediFinance, nicht als Ersatz; Transport-Abstraktion im Backend (`DocumentTransport`), Kanalwahl ActivityPub → Peppol → E-Mail/Download; kein eigener Access Point je Mandant ([peppol.md](peppol.md)) | E18, E05 |
 | Keycloak-Topologie | Ein Keycloak, ein Realm je Mandant | E02 |
 
 ## Offene Fragen
@@ -49,6 +50,8 @@
 10. **Zielmärkte** außer Deutschland (Österreich/Schweiz) – beeinflusst Kontenrahmen und Steuerlogik. (E09)
 11. **Pflichtangaben auf Geschäftsbriefen** (§ 37a HGB, § 35a GmbHG) und Rechnungen (§ 14 UStG): Umsetzung über strukturierten Fuß (PDFCraft R10) – von Steuer-/Rechtsberatung prüfen lassen, Prüfliste in [#45](https://github.com/maltinapro/fedi-finance/issues/45). (E04, E07)
 12. ~~**Archiv-Storage im Cluster**~~ – geklärt (11/2026): Start mit mindestens 3 Nodes, Rook-Ceph mit RGW und S3 Object Lock, Details und Begründung in [storage.md](storage.md). Offen zur Prüfung durch die Steuer-/Rechtsberatung: Compliance-Modus mit nicht umkehrbarer Retention und Aufbewahrung statt Löschung (Art. 17 Abs. 3 lit. b DSGVO). (E08, E11, E12)
+13. **Peppol-Betriebsmodell**: externer Access Point per Provider-API (Datenverarbeitung durch Dritte, AVV, Opt-in) oder Betreiber-Gateway als Peppol-Service-Provider (z. B. phoss-ap/phoss-smp, Java; Aufnahme, MLS- und Reporting-Pflichten bei OpenPeppol zu klären)? (E18-01)
+14. **UBL-Erzeugung für Peppol BIS Billing 3.0**: Peppol schreibt UBL vor (CII nur optional, wenn der Empfänger es im SMP registriert); PDFCraft erzeugt bisher CII; UBL-Ausgabe als neue Upstream-Anforderung R12 ([pdfcraft.md](pdfcraft.md#7-anforderungen-an-pdfcraft-upstream)) oder Konvertierung im Gateway? Dazu Validierung (XSD/Schematron: phive-rules-peppol, KoSIT). (E18-04, E18-05)
 
 ## Änderungsprotokoll
 
@@ -63,3 +66,5 @@
 - 11/2026: Start mit mindestens 3 Nodes festgelegt; Storage-Entscheidungen S1–S6 in [storage.md](storage.md) dokumentiert (Rook-Ceph, Object Lock, Backup-Ziel, Offboarding); Object Lock in SeaweedFS (Dev) geprüft.
 - 11/2026: Offsite-Backup entschieden: Velero mit `snapshotMoveData`, Barman, Archiv-Replikator (E13-11) in ein S3-Ziel mit Object Lock an anderem Standort; Aufbewahrung 30 Tage/12 Wochen, RPO/RTO festgelegt; Rest-Unsicherheit nur noch Standort/Anbieter des Offsite-Ziels (Betreiberentscheidung).
 - 11/2026: Storage auf „S3 only“ umgestellt: Anwendung kennt nur S3 (Ceph ist Infrastruktur), PVC-Dokumentenbackend entfällt, zwei Buckets je Mandant (`data`, `archive`), Zugangsdaten per Operator/Provisioner als Secrets (Rook-OBC für `data`, Provisioner-Job für `archive`, Spike zu Object Lock in OBC in E12-04).
+- 11/2026: Peppol bewertet: optionale Brücke zusätzlich zu ActivityPub (kein Wechsel der Ausrichtung), neues Epic E18 in Phase 2, Konzept in [peppol.md](peppol.md); Transport-Abstraktion schon in E05-08 vorgesehen; Fragen Nr. 13–14, Anforderung R12 an PDFCraft vorgeschlagen.
+- 24.11.2026: Peppol-Konzept gegen die aktuellen OpenPeppol-Spezifikationen geprüft und korrigiert: CII ist in BIS 3.0 optional (UBL Pflicht), MLS ersetzt MLR, Invoice Response nur im optionalen Profil 02; Details in [peppol.md](peppol.md#geprüfter-stand).

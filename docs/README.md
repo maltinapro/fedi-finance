@@ -4,6 +4,7 @@
 | --- | --- |
 | [architecture.md](architecture.md) | Komponenten, Mandantenmodell, Datenhaltung |
 | [federation.md](federation.md) | ActivityPub-Design, Discovery, Nachrichtentypen |
+| [peppol.md](peppol.md) | Peppol als optionaler Transportweg neben ActivityPub (Kanalwahl, Betriebsmodelle, Format) |
 | [compliance.md](compliance.md) | GoBD, Aufbewahrung, E-Rechnung, DSGVO |
 | [pdfcraft.md](pdfcraft.md) | PDFCraft: Funktionsumfang, REST-Anbindung, Betrieb, Frontend-Strategie, Anforderungen |
 | [design.md](design.md) | Design-Leitfaden (Material Design 3, übernommen aus PDFCraft) |

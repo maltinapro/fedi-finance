@@ -15,7 +15,7 @@ Verwaltung der eigenen Unternehmensstammdaten und der Geschäftspartner (lokal a
 ## Issues
 - [ ] **E04-01 Datenmodell Unternehmen** – Name, Rechtsform, Anschrift, Kontakt, USt-IdNr., Steuernummer, Registerdaten, Geschäftsführung (Pflichtangaben auf Geschäftsbriefen), Bankverbindung, Geschäftsjahr, Währung; Erscheinungsbild für PDFs (Logo, Unterschrift, Design, Akzentfarbe, Schrift, Texte – E07-03). AK: Migration + API.
 - [ ] **E04-02 Onboarding-Assistent** – Erstkonfiguration (Rechtsform, Kontenrahmen, Besteuerungsart, Kleinunternehmer). AK: Profil steuert Folge-Features.
-- [ ] **E04-03 Geschäftspartner (Kunde/Lieferant)** – CRUD, Typ, Anschrift, E-Mail, USt-IdNr., Käuferreferenz/Leitweg-ID, bevorzugtes E-Rechnungsprofil, Zahlungsbedingungen, Ansprechpartner, Notizen. AK: Suche + Tests.
+- [ ] **E04-03 Geschäftspartner (Kunde/Lieferant)** – CRUD, Typ, Anschrift, E-Mail, USt-IdNr., Käuferreferenz/Leitweg-ID (Peppol-ID: E18-03), bevorzugtes E-Rechnungsprofil, Zahlungsbedingungen, Ansprechpartner, Notizen. AK: Suche + Tests.
 - [ ] **E04-04 Partner per Domain hinzufügen** – Eingabe `f1.com` → Discovery + Stammdaten-Import (nutzt E05). AK: Partner mit Quelle „föderiert" markiert.
 - [ ] **E04-05 Stammdaten-Versionierung** – Historie, Gültigkeitszeiträume (Beleg verwendet Stand zum Belegdatum). AK: Änderung verändert alte Belege nicht.
 - [ ] **E04-06 Sichtbarkeitsstufen** – Je Feld: öffentlich/Partner/privat für die Föderation. AK: Default datensparsam.

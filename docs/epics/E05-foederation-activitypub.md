@@ -20,10 +20,10 @@ Instanzen finden sich über die Domain, tauschen Stammdaten aus und übermitteln
 - [ ] **E05-05 Inbox/Outbox & Signaturen** – Signieren, Verifizieren, Replay-Schutz, Digest-Header. AK: Negativtests.
 - [ ] **E05-06 Partner-Handshake** – Anfrage/Annahme/Ablehnung/Entfernen, Benachrichtigung im UI. AK: Zustandsautomat getestet.
 - [ ] **E05-07 Stammdaten-Synchronisation** – Initialer Abruf, Updates per Activity (`Update`), Konfliktregeln. AK: Änderungen kommen an.
-- [ ] **E05-08 Belegzustellung** – `ff:Invoice` senden/empfangen inkl. PDF/XML-Anhang, Prüfsummen, Statusrückmeldungen. AK: Eingangsrechnung entsteht als Entwurf beim Empfänger.
+- [ ] **E05-08 Belegzustellung** – `ff:Invoice` senden/empfangen inkl. PDF/XML-Anhang, Prüfsummen, Statusrückmeldungen. AK: Eingangsrechnung entsteht als Entwurf beim Empfänger. Implementierung hinter einer Transport-Schnittstelle (`DocumentTransport`, siehe E18-02), damit weitere Kanäle (Peppol) ergänzt werden können.
 - [ ] **E05-09 Zustellqueue & Zuverlässigkeit** – Retry/Backoff, Idempotenz, Dead-Letter, Monitoring. AK: Ausfalltest.
 - [ ] **E05-10 Sicherheit** – SSRF-Schutz, Rate-Limits, Blocklist, Größenlimits, Domain-Verifikation. AK: Security-Tests.
-- [ ] **E05-11 Interoperabilität & Fallback** – Partner ohne FediFinance: E-Mail/Download-Link. AK: Fallback-Flow.
+- [ ] **E05-11 Interoperabilität & Fallback** – Partner ohne FediFinance: E-Mail/Download-Link. AK: Fallback-Flow. Peppol als weiterer Kanal: [E18](E18-peppol-anbindung.md).
 - [ ] **E05-12 Föderations-Testumgebung** – Docker-Compose mit 2–3 Instanzen für E2E. AK: E2E in CI.
 
 ## Offene Fragen
