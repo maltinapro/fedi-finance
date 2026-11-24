@@ -15,7 +15,7 @@ Server tauschen Stammdaten und Belege (z. B. Rechnungen) über **ActivityPub** a
 - **Gestaltung**: Material Design 3 mit dem Design-System und Belegeditor von PDFCraft.
 - **Mandantenfähig**: pro Kunde ein Kubernetes-Namespace (Helm-Release) mit eigener DB, Storage und KI.
 - **KI-Assistent**: eigenes Datensilo pro Kunde, beantwortet Fragen zu Buchhaltung und Bedienung.
-- **Offen**: nur Open-Source-Infrastruktur (Rust, TypeScript, PostgreSQL, Keycloak, Helm, Velero, vLLM).
+- **Offen**: nur Open-Source-Infrastruktur (Rust, TypeScript, PostgreSQL, Keycloak, Helm, Velero, vLLM); einzige Ausnahme ist ERiC für die ELSTER-Übermittlung ([docs/elster.md](docs/elster.md)).
 
 ## Status
 

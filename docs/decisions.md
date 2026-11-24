@@ -14,7 +14,7 @@
 | Gestaltung | Material Design 3 mit dem Design-System von PDFCraft (Tokens, Komponenten, Icons, Papier-Editor), Farbschema unverändert ([design.md](design.md)) |
 | Deployment | Kubernetes + Helm, ein Namespace/Release je Kunde |
 | Backup | Velero (Kopia, `snapshotMoveData`) + CloudNativePG/Barman + Archiv-Replikator, **Offsite** (S3 mit Object Lock, anderer Standort, EU) + Datenexport; Rhythmen, Aufbewahrung, RPO/RTO in [operations.md](operations.md#backup-und-restore) |
-| Lizenzen | Nur Open-Source-Infrastruktur |
+| Lizenzen | Nur Open-Source-Infrastruktur; einzige Ausnahme: ERiC für ELSTER (isoliert, optional, nicht im Repository/Image, [elster.md](elster.md)) |
 | KI | Pro Kunde eigenes Datensilo; Start CPU, später NVIDIA Ampere |
 
 ## Vorschläge (zu bestätigen in der jeweiligen Epic)
@@ -35,6 +35,7 @@
 | Cluster-Storage | Rook-Ceph (min. 3 Nodes, Replikation 3): RBD für PVCs, RGW als S3-Dienst; für die Anwendung irrelevant ([storage.md](storage.md#6-cluster-storage-rook-ceph)) | E12 |
 | Peppol | Optionale Brücke neben ActivityPub für Partner ohne FediFinance, nicht als Ersatz; Transport-Abstraktion im Backend (`DocumentTransport`), Kanalwahl ActivityPub → Peppol → E-Mail/Download; kein eigener Access Point je Mandant ([peppol.md](peppol.md)) | E18, E05 |
 | Keycloak-Topologie | Ein Keycloak, ein Realm je Mandant | E02 |
+| ELSTER | Direktübermittlung per ERiC in `elster-service` (Rust, `libloading`) je Mandant, Zertifikat des Unternehmens, PIN nicht gespeichert; Nachweise im Archiv ([elster.md](elster.md)) | E21 |
 | Steuerberatung & Umstieg | DATEV-Export (Buchungsstapel + Belege) ist Pflicht, nicht optional; Import aus DATEV-Buchungsstapel, Lexware Office und sevDesk; beides vor dem ersten echten Kunden ([market.md](market.md)) | E20 |
 
 ## Offene Fragen
@@ -42,7 +43,7 @@
 1. ~~**PDFCraft-Schnittstelle**~~ – geklärt (11/2026): REST-API `/v1` (OpenAPI 3.1), PDF/A-3b mit eingebettetem EN-16931-/XRechnung-XML, Token-Auth, zustandslos. Offen bleiben Deployment-Variante und Editor-Paket; die Anforderungen R1–R11 sind upstream umgesetzt und mit PDFCraft `v0.34.0` released ([pdfcraft.md](pdfcraft.md#7-anforderungen-an-pdfcraft-upstream)). (E07)
 2. **ActivityPub in Rust**: vorhandene Bibliothek (z. B. `activitypub_federation`) oder Eigenbau? (E05)
 3. **Bankanbindung** mit Open-Source-Mitteln: FinTS/HBCI vs. PSD2-Aggregator; kommerzielle Aggregatoren wären kein OSS. (E10)
-4. **ELSTER/UStVA**: Die offizielle ERiC-Bibliothek ist nicht quelloffen – Umgang (Export-XML + manuelle Übermittlung vs. ERiC-Integration). (E09)
+4. ~~**ELSTER/UStVA**~~ – entschieden (24.11.2026): Direktübermittlung über ERiC als begrenzte Ausnahme vom Open-Source-Grundsatz, in einem optionalen Dienst je Mandant; ERiC stellt der Betreiber bereit, der auch die Hersteller-ID hält; Rückfall XML für Mein ELSTER bzw. DATEV-Export ([elster.md](elster.md)). Offen in E21-01: Bereitstellungsweg; in E21-14: Übermittlung im Auftrag (§ 87d AO). (E09, E21)
 5. **AI-Gateway-Sprache**: Rust im Backend oder separater TypeScript/Node.js-Dienst? (E14)
 6. **Keycloak je Mandant oder geteilt**: Isolation vs. Betriebsaufwand. (E02, E12)
 7. **Zeitstempel/Revisionssicherheit**: Reicht Hash-Kette oder qualifizierter Zeitstempel (RFC 3161)? (E08)
@@ -72,3 +73,4 @@
 - 24.11.2026: Peppol-Konzept gegen die aktuellen OpenPeppol-Spezifikationen geprüft und korrigiert: CII ist in BIS 3.0 optional (UBL Pflicht), MLS ersetzt MLR, Invoice Response nur im optionalen Profil 02; Details in [peppol.md](peppol.md#geprüfter-stand).
 - 24.11.2026: Markt- und Wettbewerbsanalyse ([market.md](market.md)): Vergleich mit DATEV, Odoo, sevDesk, Lexware, Haben u. a.; Kern-USP ist der direkte Belegkreislauf zwischen Buchhaltungen (Föderation), nicht die E-Rechnung; Positionierungsvorschlag als offene Frage Nr. 15.
 - 24.11.2026: Roadmap an die Marktanalyse angepasst: neues Epic E20 (Steuerberatung & Umstieg: DATEV-Export als Pflicht, Import aus DATEV/Lexware Office/sevDesk), E09-10 nach E20 verschoben; E05-02 (Vokabular früh veröffentlichen), E05-11 (Einladungshinweis im E-Mail-Fallback), neu E05-13 (Demo Unternehmensgruppe) und E12-13 (gehostetes Angebot). Zielgruppe (Nr. 15) bleibt offen.
+- 24.11.2026: ELSTER-Anbindung entschieden (Nr. 4): ERiC als einzige Ausnahme vom Open-Source-Grundsatz, isoliert im optionalen `elster-service`; Konzept [elster.md](elster.md), neues Epic E21; Grundlage u. a. die ELSTER-Doku von Haben (Drittquelle, amtlich prüfen in E21-01).

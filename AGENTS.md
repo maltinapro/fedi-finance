@@ -34,6 +34,7 @@ Status: **foundation done (E00)** – repository skeleton, CI and dev environmen
 | `docs/architecture.md` | Architecture, components, tenancy model |
 | `docs/federation.md` | ActivityPub design |
 | `docs/peppol.md` | Peppol als optionaler Transportweg neben ActivityPub (Kanalwahl, Betriebsmodelle A/B/C, UBL-Pflicht/CII optional, MLS, geprüfter Stand, Epic E18) |
+| `docs/elster.md` | ELSTER-Anbindung über ERiC (einzige Ausnahme vom OSS-Grundsatz, Hersteller-ID beim Betreiber, Zertifikat des Unternehmens, `elster-service`, Epic E21) |
 | `docs/compliance.md` | GoBD, retention, GDPR, e-invoicing |
 | `docs/ai.md` | AI concept and model recommendation |
 | `docs/storage.md` | Storage: S3-only app contract, buckets `data`/`archive`, credentials provisioning, Rook-Ceph (min. 3 Nodes), offsite backup, offboarding |
@@ -67,7 +68,7 @@ CI: `.github/workflows/ci.yml` (Rust, cargo-deny, frontend, Helm, dev-compose va
 - Work in one PR per roadmap step, branched from the latest `main`, so each step can be tested locally.
 - PR titles must follow Conventional Commits (e.g. `feat: ...`), because PRs are squash-merged and the title becomes the commit message.
 - No per-file license headers: the license is `LICENSE` (MIT, provisional, see `docs/decisions.md` #8) and manifests carry `license = "MIT"`.
-- Use open source components only (OSI-approved licenses) for infrastructure and dependencies; check licenses before adding a dependency.
+- Use open source components only (OSI-approved licenses) for infrastructure and dependencies; check licenses before adding a dependency. Sole exception: ERiC for ELSTER, isolated in the optional `elster-service`, never committed or baked into published images (`docs/elster.md`).
 - Never commit secrets. Collect only data that is required (GDPR data minimisation).
 - Booked data is never modified in place (GoBD immutability): corrections are done via reversal entries.
 - All PDFs come from PDFCraft via the backend; the browser never holds a PDFCraft token. Issued PDFs are rendered once at release and never re-rendered (`docs/pdfcraft.md`).
@@ -102,3 +103,4 @@ Full list with status: `docs/roadmap.md`. Next steps:
 - [x] `E00` (repository foundation: monorepo skeleton, CI, dev environment) done. Open: maintainer decision on project license (#8) and vocabulary domain (#9) in `docs/decisions.md`.
 - [ ] Then `E01` (Rust backend skeleton) and `E02` (auth with Keycloak).
 - [ ] Decide market positioning and primary target group (`docs/decisions.md` #15, analysis in `docs/market.md`); verify the ◐-marked competitor facts before publishing. Target-group-independent consequences are already in the roadmap (new epic `E20` DATEV export/migration, E05-02, E05-11, E05-13, E12-13).
+- [x] ELSTER decided: direct transmission via ERiC (`docs/elster.md`, epic `E21`). Apply for the ELSTER Hersteller-ID early, it takes weeks (E21-01).
