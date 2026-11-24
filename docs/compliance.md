@@ -80,6 +80,12 @@ Periodenabschluss, Jahresabschluss, Anlagenbuchhaltung. Der Funktionsumfang wird
 - Peppol-Access-Points verarbeiten Belegdaten (Auftragsverarbeitung): Nutzung nur per Opt-in je Mandant, mit AVV und EU-Hosting.
   Rechtlich/steuerlich von der Steuerberatung prüfen lassen.
 
+## Steuermeldungen (ELSTER)
+
+Umsatzsteuer-Voranmeldung, Jahreserklärungen und E-Bilanz werden aus festgeschriebenen Buchungen berechnet und über
+ERiC direkt an ELSTER übermittelt; gesendetes XML, Transferticket und Übermittlungsprotokoll werden unveränderlich
+archiviert, Korrekturen sind berichtigte Meldungen. Details, Hersteller-ID und Rückfallwege: [elster.md](elster.md) (E21).
+
 ## DSGVO
 
 - **Datenminimierung** und Zweckbindung je Datenfeld; Verzeichnis der Verarbeitungstätigkeiten als Vorlage.

@@ -112,7 +112,7 @@ Angaben zu den Wettbewerbern ◐ außer bei Odoo-/Open-Source-Lizenzen und -Modu
 | Peppol | ◑ *E18* (optional) | ◑ | ● (über Odoo-Proxy) | ? | ? | ○ |
 | GoBD-Archiv mit technischer Sperre (Object Lock, Hash) | ● *E08* | ● | ◑ | ● | ● | ◑ (DB-Trigger, Hashkette) |
 | DATEV-Export | ● *E20* | ● | ◑ | ● | ● | ● |
-| ELSTER (UStVA) | ◑ *offen (decisions Nr. 4)* | ● | ◑ | ● | ● | ● |
+| ELSTER (UStVA) | ● *E21 (ERiC)* | ● | ◑ | ● | ● | ● |
 | Bankanbindung | ● *E10* | ● | ◑ | ● | ● | ● |
 | KI im eigenen Datensilo (Open-Weights, eigene GPU) | ● *E14–E16, E19* | ○ (Cloud-KI) | ◑ (IAP) | ○ | ○ | ◑ (optional, eigenes Modell) |
 | Mandantenbetrieb für Hoster/Kanzleien | ● *E12* (Namespace je Mandant, automatisch) | ● | ◑ | – | – | ◑ (Partnerprogramm, Instanz je Kunde) |
@@ -164,7 +164,7 @@ Hier muss FediFinance mithalten, kann sich aber nicht abheben.
 | **Netzwerkeffekt-Kaltstart:** Föderation nützt erst, wenn Partner auch FediFinance nutzen | Kern-USP am ersten Tag kaum spürbar | Peppol- und E-Mail-Brücke machen das Produkt allein nutzbar; Einladungslink in jeder E-Mail-Rechnung; Start in Clustern (siehe §6) |
 | Reife: Konzept, kein Code für Fachlogik | Kein Wettbewerb in den nächsten Monaten | MVP-Fokus Phase 1, Pilotkunden aus einem Cluster |
 | DATEV-Export war nur „optional“ (E09-10) | Ausschlusskriterium für Steuerberatungen | Pflicht und vorgezogen: E20 (vor dem ersten echten Kunden) |
-| ELSTER ungelöst (ERiC nicht quelloffen) | UStVA-Lücke gegenüber allen Wettbewerbern | Entscheidung zu decisions.md Nr. 4 treffen; Übergang: Export für die Kanzlei |
+| ELSTER: ERiC nicht quelloffen, Hersteller-ID je Betreiber | Aufwand und Ausnahme vom OSS-Grundsatz | Entschieden: ERiC isoliert im optionalen Dienst (E21, [elster.md](elster.md)); Rückfall XML für Mein ELSTER bzw. DATEV-Export |
 | Kein Import aus anderen Systemen (außer PDFCraft) | Wechselhürde | Migration aus lexoffice/sevDesk/DATEV-Buchungsstapel: E20-05 bis E20-08 |
 | Betriebsaufwand (Kubernetes, Ceph, 3 Nodes) | Für Einzelunternehmer zu schwer | Gehostetes Angebot durch Betreiber/Partner (E12-13); Selbstbetrieb nur für IT-affine Kunden |
 | Haben als Open-Source-Alternative mit Vorsprung | Kampf um dieselbe Community | Nicht auf Freelancer zielen, sondern auf vernetzte KMU (siehe §6); ggf. Kooperation (gemeinsames Vokabular) |

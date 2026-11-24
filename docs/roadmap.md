@@ -17,7 +17,7 @@ speichert Belege und PDFs und übernimmt Gestaltung und Editor. Details: [pdfcra
 
 - **Phase 0 – Fundament**: E00, E01, E02, E03
 - **Phase 1 – MVP (Rechnungen föderiert versenden)**: E04, E05, E06, E07, E08
-- **Phase 2 – Produktreife**: E09, E10, E11, E12, E13, E17, E18, E20
+- **Phase 2 – Produktreife**: E09, E10, E11, E12, E13, E17, E18, E20, E21
 - **Phase 3 – KI**: E14, E15, E16
 - **Phase 4 – Skalierung (GPU)**: E19
 
@@ -46,8 +46,9 @@ speichert Belege und PDFs und übernimmt Gestaltung und Editor. Details: [pdfcra
 | [E18](epics/E18-peppol-anbindung.md) | Peppol-Anbindung (optionaler Transportweg neben ActivityPub) | 2 | E05, E07, E08, E12 | offen |
 | [E19](epics/E19-gpu-betrieb.md) | GPU-Betrieb (Ampere) | 4 | E14, E16 | offen |
 | [E20](epics/E20-steuerberatung-umstieg.md) | Steuerberatung & Umstieg (DATEV-Export, Migration) | 2 | E04, E06, E08 | offen |
+| [E21](epics/E21-elster-anbindung.md) | ELSTER-Anbindung (ERiC) | 2 | E06, E08, E09, E12 | offen |
 
-(E18 ist seit 11/2026 die Peppol-Anbindung, E20 seit 24.11.2026 Steuerberatung & Umstieg; E21 ff. sind frei für spätere Epics, z. B. Mobile, Reporting; Konzept: [peppol.md](peppol.md).)
+(E18 ist seit 11/2026 die Peppol-Anbindung, E20 seit 24.11.2026 Steuerberatung & Umstieg, E21 ELSTER-Anbindung ([elster.md](elster.md)); E22 ff. sind frei für spätere Epics, z. B. Mobile, Reporting; Konzept: [peppol.md](peppol.md).)
 
 ## Ausrichtung aus der Marktanalyse
 
@@ -57,7 +58,8 @@ E-Rechnung, GoBD und DATEV-Export sind Pflicht, aber kein Unterscheidungsmerkmal
 - DATEV-Export ist Pflicht und mit dem Umstieg aus anderen Programmen ein eigenes Epic (E20, vor dem ersten echten Kunden).
 - Vokabular früh als offene Spezifikation (E05-02), Einladungshinweis im E-Mail-Fallback (E05-11),
   Demo-Szenario Unternehmensgruppe (E05-13), gehostetes Angebot (E12-13).
-- Offen: Primärzielgruppe (decisions.md Nr. 15), Lizenz (Nr. 8) und ELSTER (Nr. 4).
+- ELSTER wird direkt über ERiC angebunden (E21, decisions.md Nr. 4).
+- Offen: Primärzielgruppe (decisions.md Nr. 15) und Lizenz (Nr. 8).
 
 ## Empfohlene Reihenfolge für Sessions
 
@@ -67,5 +69,5 @@ E-Rechnung, GoBD und DATEV-Export sind Pflicht, aber kein Unterscheidungsmerkmal
 3. E04 → E06 → übrige E07 → E08 (Rechnung im Belegeditor erstellen, freigeben, PDF archivieren)
 4. E05 (Föderation) parallel/danach, sobald E04 steht; mit E05-13 (Demo Unternehmensgruppe) als erstem Vorzeigeszenario
 5. E12 + E13 (Deployment inkl. PDFCraft-Betrieb E12-12, Backup) und E20 (DATEV-Export, Umstieg) vor dem ersten echten Kunden
-6. E09, E10, E11, E17, E18 (Peppol, nach E05/E07/E08/E12)
+6. E09, E10, E11, E17, E18 (Peppol, nach E05/E07/E08/E12), E21 (ELSTER, mit bzw. nach E09-05; Hersteller-ID früh beantragen, E21-01)
 7. E14 → E15 → E16, später E19

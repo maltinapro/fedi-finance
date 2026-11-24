@@ -8,6 +8,7 @@
 | [compliance.md](compliance.md) | GoBD, Aufbewahrung, E-Rechnung, DSGVO |
 | [pdfcraft.md](pdfcraft.md) | PDFCraft: Funktionsumfang, REST-Anbindung, Betrieb, Frontend-Strategie, Anforderungen |
 | [design.md](design.md) | Design-Leitfaden (Material Design 3, übernommen aus PDFCraft) |
+| [elster.md](elster.md) | ELSTER-Anbindung über ERiC (Ausnahme vom OSS-Grundsatz, Hersteller-ID, Zertifikat, Architektur, Verfahren) |
 | [ai.md](ai.md) | KI-Konzept, Modellempfehlung, Training |
 | [storage.md](storage.md) | S3-Buckets `data`/`archive` (Object Lock), Zugangsdaten, Rook-Ceph (3 Nodes), Offsite-Backup |
 | [operations.md](operations.md) | Kubernetes, Helm, Backup, Export |

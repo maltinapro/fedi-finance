@@ -8,7 +8,8 @@
             │                                             ├─▶ S3: Buckets data + archive     │
             │                                             ├─▶ PDFCraft (REST, zustandslos)   │
             │                                             ├─▶ AI-Gateway ─▶ LLM-Serving      │
-            │                                             └─▶ Bank-Connector                 │
+            │                                             ├─▶ Bank-Connector                 │
+            │                                             └─▶ ELSTER-Dienst (ERiC, optional) │
             └───────────────────────▲──────────────────────────────────────────────────────┘
                                     │ ActivityPub (HTTPS, HTTP Signatures)
             ┌───────────────────────▼──────────────────────────────────────────────────────┐
@@ -31,6 +32,7 @@
 | Identity | Keycloak | Login, SSO (OIDC/SAML, externe IdPs), Rollen |
 | Föderation | ActivityPub im Backend | Austausch mit anderen FediFinance-Servern |
 | Peppol-Gateway (optional, Phase 2) | Access-Point-Anbindung (Provider-API oder phase4/Oxalis), geteilt, ohne Belegspeicherung ([peppol.md](peppol.md)) | Brücke zu Partnern ohne FediFinance; Backend wählt den Kanal über `DocumentTransport` |
+| ELSTER-Dienst (optional, Phase 2) | Rust, lädt ERiC (nicht quelloffen, Ausnahme) zur Laufzeit; je Mandant ([elster.md](elster.md)) | Steuermeldungen prüfen und an ELSTER übermitteln (UStVA, Jahreserklärungen, E-Bilanz) |
 | AI-Gateway | TypeScript/Node.js oder Rust (siehe decisions.md) | RAG, Tool-Calls, Mandantentrennung, Chatverlauf |
 | LLM-Serving | vLLM (GPU) / llama.cpp (CPU, Entwicklung) | Inferenz, später LoRA je Mandant |
 | Backup | Velero + DB-Backups/WAL | Cluster- und Datenbackup |
