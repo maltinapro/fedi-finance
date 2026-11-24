@@ -40,6 +40,7 @@ Status: **foundation done (E00)** – repository skeleton, CI and dev environmen
 | `docs/operations.md` | Kubernetes, Helm, backup, export |
 | `docs/pdfcraft.md` | PDFCraft features, REST integration, operation, frontend strategy, upstream requirements (R1–R11) |
 | `docs/design.md` | Design guide (Material Design 3, adopted from PDFCraft; only FediFinance additions/deviations) |
+| `docs/market.md` | Markt- und Wettbewerbsanalyse (DATEV, Odoo, sevDesk, Lexware, Haben u. a.), Alleinstellungsmerkmale, Positionierung, Zielgruppen, Roadmap-Folgerungen |
 | `docs/decisions.md` | Decisions made and open questions |
 | `docs/roadmap.md` | Epic overview, order, status |
 | `docs/epics/` | One file per epic with its issues/tasks |
@@ -100,3 +101,4 @@ Full list with status: `docs/roadmap.md`. Next steps:
 - [ ] Legal review of mandatory details on invoices/business letters by a tax/legal advisor (#45) before the first real customer.
 - [x] `E00` (repository foundation: monorepo skeleton, CI, dev environment) done. Open: maintainer decision on project license (#8) and vocabulary domain (#9) in `docs/decisions.md`.
 - [ ] Then `E01` (Rust backend skeleton) and `E02` (auth with Keycloak).
+- [ ] Decide market positioning and primary target group (`docs/decisions.md` #15, analysis in `docs/market.md`); verify the ◐-marked competitor facts before publishing.
