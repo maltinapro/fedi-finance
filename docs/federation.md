@@ -37,6 +37,14 @@ Das Vokabular wird versioniert und dokumentiert, damit auch Dritte kompatibel im
 - Rate Limits, Domain-Blocklist, SSRF-Schutz beim Abruf fremder Server, Größenlimits.
 - Die Zustellung ersetzt nicht die rechtlichen Anforderungen an die E-Rechnung: siehe [compliance.md](compliance.md).
 
+## Weitere Transportwege
+
+ActivityPub ist der native Weg zwischen FediFinance-Servern. Für Partner ohne FediFinance sind Brücken vorgesehen:
+**Peppol** (optional, [peppol.md](peppol.md), E18) und E-Mail/Download (E05-11). Das Backend wählt den Kanal je Partner
+(ActivityPub → Peppol → E-Mail/Download) über eine gemeinsame Transport-Schnittstelle (`DocumentTransport`); die
+Belegzustellung (E05-08) wird bereits dahinter implementiert. Peppol-Rechnungsantworten (Invoice Response)
+werden auf `ff:InvoiceStatus` abgebildet.
+
 ## Offene Punkte
 
 Siehe [decisions.md](decisions.md): Rust-ActivityPub-Bibliothek vs. Eigenbau, Signaturstandard, Domain des Vokabulars.

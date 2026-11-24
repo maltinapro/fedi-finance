@@ -189,6 +189,7 @@ Geprüft mit einem Smoke-Test des Release-Images (Dienst-Token ohne Valkey, `/v1
 | R9 | Design-System als Paket (Tokens, `ui`, Icons) | Drift vermeiden | Kopie + Drift-Check (E03-10) | [pdfcraft#222](https://github.com/maltinapro/pdfcraft/issues/222) | ✔ [pdfcraft#238](https://github.com/maltinapro/pdfcraft/pull/238): `@maltinapro/pdfcraft-design` 0.1.0 mit Changelog und Kontrasttest, von PDFCraft selbst genutzt; veröffentlicht in GitHub Packages ([pdfcraft#243](https://github.com/maltinapro/pdfcraft/issues/243)) |
 | R10 | Strukturierter Fuß (Kontakt / Bank / Steuer- und Registerdaten) über die API (PDFCraft E11-05) | Pflichtangaben auf Geschäftsbriefen (§ 37a HGB, § 35a GmbHG) aus Stammdaten | freier Fußtext aus Stammdaten generiert | [pdfcraft#223](https://github.com/maltinapro/pdfcraft/issues/223) | ✔ [pdfcraft#239](https://github.com/maltinapro/pdfcraft/pull/239): `settings.footerMode: "structured"` + `sender.legalForm`, `registeredOffice`, `registerCourt`, `registerNumber`, `managingDirectors`, `supervisoryBoardChair`; Beschriftungen rechtlich ungeprüft ([#45](https://github.com/maltinapro/fedi-finance/issues/45)) |
 | R11 | Produktions-Helm-Chart oder Chart-Bausteine | Einbindung in das FediFinance-Chart | eigene Templates im FediFinance-Chart | [pdfcraft#224](https://github.com/maltinapro/pdfcraft/issues/224) | ✔ [pdfcraft#240](https://github.com/maltinapro/pdfcraft/pull/240): `values-production.yaml` (nur `/v1`, HPA, PDB, NetworkPolicy, ServiceMonitor, bestehende Secrets), `fullnameOverride`; OCI-Chart ab `0.33.0` |
+| R12 | E-Rechnung wahlweise als **UBL 2.1** (Peppol BIS Billing 3.0 / XRechnung UBL) statt CII, inkl. Gutschrift | Peppol schreibt UBL vor, CII nur bei Registrierung des Empfängers im SMP ([peppol.md](peppol.md)); PDFCraft erzeugt bisher CII | Konvertierung CII → UBL im Gateway (verlustbehaftet, nicht bevorzugt) | noch nicht angelegt (Vorschlag, E18-04) | offen |
 
 ## 8. Offene Punkte
 
@@ -199,3 +200,4 @@ Geprüft mit einem Smoke-Test des Release-Images (Dienst-Token ohne Valkey, `/v1
 - Dev-Umgebung auf Dienst-Tokens umstellen und PDFCraft-Chart (OCI) im FediFinance-Chart einbinden (E07-02, E12-07);
   Token für GitHub Packages in CI/Renovate bereitstellen, sobald das Frontend die Pakete nutzt (E03-10).
 - Pflichtangaben auf Geschäftsbriefen und Rechnungen von Steuerberatung/Rechtsberatung prüfen lassen.
+- UBL-Ausgabe für Peppol (R12) als Upstream-Issue anlegen, sobald E18-04 ansteht.

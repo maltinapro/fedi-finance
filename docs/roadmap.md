@@ -17,7 +17,7 @@ speichert Belege und PDFs und übernimmt Gestaltung und Editor. Details: [pdfcra
 
 - **Phase 0 – Fundament**: E00, E01, E02, E03
 - **Phase 1 – MVP (Rechnungen föderiert versenden)**: E04, E05, E06, E07, E08
-- **Phase 2 – Produktreife**: E09, E10, E11, E12, E13, E17
+- **Phase 2 – Produktreife**: E09, E10, E11, E12, E13, E17, E18
 - **Phase 3 – KI**: E14, E15, E16
 - **Phase 4 – Skalierung (GPU)**: E19
 
@@ -43,9 +43,10 @@ speichert Belege und PDFs und übernimmt Gestaltung und Editor. Details: [pdfcra
 | [E15](epics/E15-ki-assistent.md) | KI-Assistent in der Anwendung | 3 | E14, E03 | offen |
 | [E16](epics/E16-ki-lernen.md) | KI-Personalisierung & kontinuierliches Lernen | 3 | E15 | offen |
 | [E17](epics/E17-betrieb-sicherheit.md) | Observability, Sicherheit & Betrieb | 2 | E12 | offen |
+| [E18](epics/E18-peppol-anbindung.md) | Peppol-Anbindung (optionaler Transportweg neben ActivityPub) | 2 | E05, E07, E08, E12 | offen |
 | [E19](epics/E19-gpu-betrieb.md) | GPU-Betrieb (Ampere) | 4 | E14, E16 | offen |
 
-(E18 ist bewusst nicht vergeben; Platz für spätere Epics, z. B. Mobile, Reporting, Integrationen/DATEV.)
+(E18 ist seit 11/2026 die Peppol-Anbindung, E20 ff. sind frei für spätere Epics, z. B. Mobile, Reporting, Integrationen/DATEV; Konzept: [peppol.md](peppol.md).)
 
 ## Empfohlene Reihenfolge für Sessions
 
@@ -55,5 +56,5 @@ speichert Belege und PDFs und übernimmt Gestaltung und Editor. Details: [pdfcra
 3. E04 → E06 → übrige E07 → E08 (Rechnung im Belegeditor erstellen, freigeben, PDF archivieren)
 4. E05 (Föderation) parallel/danach, sobald E04 steht
 5. E12 + E13 (Deployment inkl. PDFCraft-Betrieb E12-12, Backup) vor dem ersten echten Kunden
-6. E09, E10, E11, E17
+6. E09, E10, E11, E17, E18 (Peppol, nach E05/E07/E08/E12)
 7. E14 → E15 → E16, später E19

@@ -11,7 +11,7 @@ Business partners are found via their domain (e.g. `f1.com`) and linked automati
 
 Key characteristics:
 
-- Federation via ActivityPub (WebFinger, HTTP Signatures, custom business vocabulary).
+- Federation via ActivityPub (WebFinger, HTTP Signatures, custom business vocabulary); optional Peppol bridge for partners without FediFinance (Phase 2, E18; transports sit behind a `DocumentTransport` abstraction).
 - GoBD-compliant bookkeeping for the supported legal forms; PDFs are rendered by [PDFCraft](https://github.com/maltinapro/pdfcraft) (stateless, called via its REST API `/v1`) and stored immutably by FediFinance, archived according to retention periods.
 - UI in Material Design 3, reusing PDFCraft's design system (tokens, components, icons) and paper-first document editor.
 - Bank account connection, roles/permissions, login + SSO (Keycloak).
@@ -33,6 +33,7 @@ Status: **foundation done (E00)** – repository skeleton, CI and dev environmen
 | `docs/README.md` | Documentation index |
 | `docs/architecture.md` | Architecture, components, tenancy model |
 | `docs/federation.md` | ActivityPub design |
+| `docs/peppol.md` | Peppol als optionaler Transportweg neben ActivityPub (Kanalwahl, Betriebsmodelle A/B/C, UBL-Pflicht/CII optional, MLS, geprüfter Stand, Epic E18) |
 | `docs/compliance.md` | GoBD, retention, GDPR, e-invoicing |
 | `docs/ai.md` | AI concept and model recommendation |
 | `docs/storage.md` | Storage: S3-only app contract, buckets `data`/`archive`, credentials provisioning, Rook-Ceph (min. 3 Nodes), offsite backup, offboarding |
