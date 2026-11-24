@@ -11,6 +11,7 @@
 | [ai.md](ai.md) | KI-Konzept, Modellempfehlung, Training |
 | [storage.md](storage.md) | S3-Buckets `data`/`archive` (Object Lock), Zugangsdaten, Rook-Ceph (3 Nodes), Offsite-Backup |
 | [operations.md](operations.md) | Kubernetes, Helm, Backup, Export |
+| [market.md](market.md) | Markt, Wettbewerb (DATEV, Odoo, sevDesk, Lexware, Open Source), Alleinstellungsmerkmale, Positionierung |
 | [decisions.md](decisions.md) | Getroffene Entscheidungen und offene Fragen |
 | [roadmap.md](roadmap.md) | Epics, Reihenfolge, Status |
 | [epics/](epics/README.md) | Epics mit Issues/Tasks |
