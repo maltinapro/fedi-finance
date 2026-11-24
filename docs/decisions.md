@@ -35,6 +35,7 @@
 | Cluster-Storage | Rook-Ceph (min. 3 Nodes, Replikation 3): RBD für PVCs, RGW als S3-Dienst; für die Anwendung irrelevant ([storage.md](storage.md#6-cluster-storage-rook-ceph)) | E12 |
 | Peppol | Optionale Brücke neben ActivityPub für Partner ohne FediFinance, nicht als Ersatz; Transport-Abstraktion im Backend (`DocumentTransport`), Kanalwahl ActivityPub → Peppol → E-Mail/Download; kein eigener Access Point je Mandant ([peppol.md](peppol.md)) | E18, E05 |
 | Keycloak-Topologie | Ein Keycloak, ein Realm je Mandant | E02 |
+| Steuerberatung & Umstieg | DATEV-Export (Buchungsstapel + Belege) ist Pflicht, nicht optional; Import aus DATEV-Buchungsstapel, Lexware Office und sevDesk; beides vor dem ersten echten Kunden ([market.md](market.md)) | E20 |
 
 ## Offene Fragen
 
@@ -52,7 +53,7 @@
 12. ~~**Archiv-Storage im Cluster**~~ – geklärt (11/2026): Start mit mindestens 3 Nodes, Rook-Ceph mit RGW und S3 Object Lock, Details und Begründung in [storage.md](storage.md). Offen zur Prüfung durch die Steuer-/Rechtsberatung: Compliance-Modus mit nicht umkehrbarer Retention und Aufbewahrung statt Löschung (Art. 17 Abs. 3 lit. b DSGVO). (E08, E11, E12)
 13. **Peppol-Betriebsmodell**: externer Access Point per Provider-API (Datenverarbeitung durch Dritte, AVV, Opt-in) oder Betreiber-Gateway als Peppol-Service-Provider (z. B. phoss-ap/phoss-smp, Java; Aufnahme, MLS- und Reporting-Pflichten bei OpenPeppol zu klären)? (E18-01)
 14. **UBL-Erzeugung für Peppol BIS Billing 3.0**: Peppol schreibt UBL vor (CII nur optional, wenn der Empfänger es im SMP registriert); PDFCraft erzeugt bisher CII; UBL-Ausgabe als neue Upstream-Anforderung R12 ([pdfcraft.md](pdfcraft.md#7-anforderungen-an-pdfcraft-upstream)) oder Konvertierung im Gateway? Dazu Validierung (XSD/Schematron: phive-rules-peppol, KoSIT). (E18-04, E18-05)
-15. **Marktpositionierung und Primärzielgruppe**: Vorschlag „föderiertes Rechnungs- und Buchhaltungsnetz für den Mittelstand“ mit Start bei Unternehmensgruppen (Intercompany), Lieferketten-Clustern und Betreibern (Hoster/Kanzleien) statt Freelancern; daraus folgen DATEV-Export als Pflicht, Migrationsimport und ein gehostetes Angebot ([market.md](market.md#6-positionierungsvorschlag)). Entscheidung beim Maintainer; beeinflusst auch Nr. 8 (Lizenz). (E04, E05, E09, E12)
+15. **Marktpositionierung und Primärzielgruppe**: Vorschlag „föderiertes Rechnungs- und Buchhaltungsnetz für den Mittelstand“ mit Start bei Unternehmensgruppen (Intercompany), Lieferketten-Clustern und Betreibern (Hoster/Kanzleien) statt Freelancern; daraus folgen DATEV-Export als Pflicht, Migrationsimport und ein gehostetes Angebot ([market.md](market.md#6-positionierungsvorschlag)). Entscheidung beim Maintainer; beeinflusst auch Nr. 8 (Lizenz). Zielgruppenunabhängige Folgerungen sind bereits in der Roadmap (E20, E05-02, E05-11, E05-13, E12-13). (E04, E05, E09, E12)
 
 ## Änderungsprotokoll
 
@@ -70,3 +71,4 @@
 - 11/2026: Peppol bewertet: optionale Brücke zusätzlich zu ActivityPub (kein Wechsel der Ausrichtung), neues Epic E18 in Phase 2, Konzept in [peppol.md](peppol.md); Transport-Abstraktion schon in E05-08 vorgesehen; Fragen Nr. 13–14, Anforderung R12 an PDFCraft vorgeschlagen.
 - 24.11.2026: Peppol-Konzept gegen die aktuellen OpenPeppol-Spezifikationen geprüft und korrigiert: CII ist in BIS 3.0 optional (UBL Pflicht), MLS ersetzt MLR, Invoice Response nur im optionalen Profil 02; Details in [peppol.md](peppol.md#geprüfter-stand).
 - 24.11.2026: Markt- und Wettbewerbsanalyse ([market.md](market.md)): Vergleich mit DATEV, Odoo, sevDesk, Lexware, Haben u. a.; Kern-USP ist der direkte Belegkreislauf zwischen Buchhaltungen (Föderation), nicht die E-Rechnung; Positionierungsvorschlag als offene Frage Nr. 15.
+- 24.11.2026: Roadmap an die Marktanalyse angepasst: neues Epic E20 (Steuerberatung & Umstieg: DATEV-Export als Pflicht, Import aus DATEV/Lexware Office/sevDesk), E09-10 nach E20 verschoben; E05-02 (Vokabular früh veröffentlichen), E05-11 (Einladungshinweis im E-Mail-Fallback), neu E05-13 (Demo Unternehmensgruppe) und E12-13 (gehostetes Angebot). Zielgruppe (Nr. 15) bleibt offen.

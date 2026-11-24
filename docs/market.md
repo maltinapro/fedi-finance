@@ -111,7 +111,7 @@ Angaben zu den Wettbewerbern ◐ außer bei Odoo-/Open-Source-Lizenzen und -Modu
 | E-Rechnung XRechnung/ZUGFeRD | ● *E07* (PDFCraft) | ● | ● | ● | ● | ● |
 | Peppol | ◑ *E18* (optional) | ◑ | ● (über Odoo-Proxy) | ? | ? | ○ |
 | GoBD-Archiv mit technischer Sperre (Object Lock, Hash) | ● *E08* | ● | ◑ | ● | ● | ◑ (DB-Trigger, Hashkette) |
-| DATEV-Export | ◑ *E09-10 (optional)* | ● | ◑ | ● | ● | ● |
+| DATEV-Export | ● *E20* | ● | ◑ | ● | ● | ● |
 | ELSTER (UStVA) | ◑ *offen (decisions Nr. 4)* | ● | ◑ | ● | ● | ● |
 | Bankanbindung | ● *E10* | ● | ◑ | ● | ● | ● |
 | KI im eigenen Datensilo (Open-Weights, eigene GPU) | ● *E14–E16, E19* | ○ (Cloud-KI) | ◑ (IAP) | ○ | ○ | ◑ (optional, eigenes Modell) |
@@ -163,10 +163,10 @@ Hier muss FediFinance mithalten, kann sich aber nicht abheben.
 | --- | --- | --- |
 | **Netzwerkeffekt-Kaltstart:** Föderation nützt erst, wenn Partner auch FediFinance nutzen | Kern-USP am ersten Tag kaum spürbar | Peppol- und E-Mail-Brücke machen das Produkt allein nutzbar; Einladungslink in jeder E-Mail-Rechnung; Start in Clustern (siehe §6) |
 | Reife: Konzept, kein Code für Fachlogik | Kein Wettbewerb in den nächsten Monaten | MVP-Fokus Phase 1, Pilotkunden aus einem Cluster |
-| DATEV-Export nur „optional“ (E09-10) | Ausschlusskriterium für Steuerberatungen | DATEV-Export zur Pflicht machen und vorziehen |
+| DATEV-Export war nur „optional“ (E09-10) | Ausschlusskriterium für Steuerberatungen | Pflicht und vorgezogen: E20 (vor dem ersten echten Kunden) |
 | ELSTER ungelöst (ERiC nicht quelloffen) | UStVA-Lücke gegenüber allen Wettbewerbern | Entscheidung zu decisions.md Nr. 4 treffen; Übergang: Export für die Kanzlei |
-| Kein Import aus anderen Systemen (außer PDFCraft) | Wechselhürde | Migration aus lexoffice/sevDesk/DATEV-Buchungsstapel (Haben macht es vor) |
-| Betriebsaufwand (Kubernetes, Ceph, 3 Nodes) | Für Einzelunternehmer zu schwer | Gehostetes Angebot durch Betreiber/Partner; Selbstbetrieb nur für IT-affine Kunden |
+| Kein Import aus anderen Systemen (außer PDFCraft) | Wechselhürde | Migration aus lexoffice/sevDesk/DATEV-Buchungsstapel: E20-05 bis E20-08 |
+| Betriebsaufwand (Kubernetes, Ceph, 3 Nodes) | Für Einzelunternehmer zu schwer | Gehostetes Angebot durch Betreiber/Partner (E12-13); Selbstbetrieb nur für IT-affine Kunden |
 | Haben als Open-Source-Alternative mit Vorsprung | Kampf um dieselbe Community | Nicht auf Freelancer zielen, sondern auf vernetzte KMU (siehe §6); ggf. Kooperation (gemeinsames Vokabular) |
 | MIT-Lizenz erlaubt proprietäre gehostete Forks | Geschäftsmodell Hosting angreifbar | Lizenzentscheidung #8 mit Blick auf die Positionierung treffen |
 | Rechtliche Aussagen ungeprüft | Vertrauensverlust | Prüfung durch Steuerberatung (#45, E08-12); kein „GoBD-zertifiziert“ ohne Testat (z. B. IDW PS 880) |
@@ -195,18 +195,20 @@ Mittelpunkt, die Kanzlei bekommt trotzdem alles im DATEV-Format.
 | 4 | Öffentliche Hand und souveränitätsorientierte Organisationen | Open Source, EU-Betrieb, XRechnung/Peppol; passt zu Open-Source-Strategien der Verwaltung ◐ |
 | später | Selbstständige/Freelancer | Preis- und Komfortwettbewerb mit SaaS und Haben; nur über günstiges gehostetes Angebot |
 
-### Folgerungen für die Roadmap (Vorschläge)
+### Folgerungen für die Roadmap
 
-1. **DATEV-Export vorziehen und verpflichtend machen** (E09-10 aus „optional“ lösen, ggf. eigenes Epic E20).
-2. **Migrationsimport** aus lexoffice/Lexware Office, sevDesk und DATEV-Buchungsstapel ergänzen (Erweiterung E04-08/E13-06).
-3. **Viraler Rückfallweg:** E-Mail-Rechnungen (E05-11) mit Einladung „direkt empfangen mit FediFinance“; Kennzahl:
-   Anteil föderierter Zustellungen.
+Umgesetzt in der Roadmap (24.11.2026) sind Nr. 1–5 und 7; Nr. 6 bleibt offene Entscheidung (decisions.md Nr. 8).
+
+1. **DATEV-Export vorziehen und verpflichtend machen** → [E20](epics/E20-steuerberatung-umstieg.md) (E09-10 dorthin verschoben).
+2. **Migrationsimport** aus lexoffice/Lexware Office, sevDesk und DATEV-Buchungsstapel → E20-05 bis E20-08.
+3. **Viraler Rückfallweg:** E-Mail-Rechnungen mit Einladung „direkt empfangen mit FediFinance“; Kennzahl:
+   Anteil föderierter Zustellungen → E05-11.
 4. **Konzern-/Intercompany-Szenario** als erstes Demo- und Pilotszenario (mehrere Instanzen, gegenseitige Rechnungen,
-   Zahlungsbestätigung) – zeigt den Kern-USP ohne fremde Partner.
-5. **Gehostetes Angebot** (Betreiber oder Partner) definieren, bevor Endkunden adressiert werden.
+   Zahlungsbestätigung) – zeigt den Kern-USP ohne fremde Partner → E05-13.
+5. **Gehostetes Angebot** (Betreiber oder Partner) definieren, bevor Endkunden adressiert werden → E12-13.
 6. **Lizenz (#8)** im Licht des Hosting-Geschäftsmodells entscheiden; Haben nutzt AGPL-3.0.
 7. Vokabular früh als offene Spezifikation veröffentlichen (Domain, decisions.md Nr. 9), damit ERP-Hersteller und
-   Projekte wie Haben oder Odoo-Module andocken können – das Netz wird größer als das Produkt.
+   Projekte wie Haben oder Odoo-Module andocken können – das Netz wird größer als das Produkt → E05-02.
 
 ## 7. Offene Prüfpunkte
 

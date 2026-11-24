@@ -21,7 +21,7 @@ Je Rechtsform die notwendigen Prozesse abbilden (Profile/Feature-Flags), inkl. A
 - [ ] **E09-07 Kapitalgesellschaft** – Gesellschafterkonten, Gewinnverwendung, E-Bilanz-Export (Taxonomie), Offenlegungs-Hinweise. AK: Beispiel-Export.
 - [ ] **E09-08 Mahnwesen** – Mahnstufen, Verzugszinsen, Mahngebühren, Mahnlauf. AK: Mahnungs-PDF (E07-09, PDFCraft-Anforderung R5).
 - [ ] **E09-09 Zahlungsverwaltung** – Zahlungsziele, Skonto, offene Posten, Zahlungsvorschläge (SEPA-Export pain.001). AK: Export validiert.
-- [ ] **E09-10 Export für Steuerberater** – DATEV-Format (CSV) optional, Prüfer-Export. AK: Importtest.
+- [ ] **E09-10 Export für Steuerberater** – verschoben nach [E20](E20-steuerberatung-umstieg.md) (DATEV-Export ist Pflicht, nicht optional, siehe [market.md](../market.md)); Prüfer-Export in E08-09. AK: entfällt hier.
 - [ ] **E09-11 Weitere Rechtsformen** – e. V., Österreich/Schweiz (später). AK: Entscheidung dokumentiert.
 
 ## Offene Fragen

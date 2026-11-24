@@ -101,4 +101,4 @@ Full list with status: `docs/roadmap.md`. Next steps:
 - [ ] Legal review of mandatory details on invoices/business letters by a tax/legal advisor (#45) before the first real customer.
 - [x] `E00` (repository foundation: monorepo skeleton, CI, dev environment) done. Open: maintainer decision on project license (#8) and vocabulary domain (#9) in `docs/decisions.md`.
 - [ ] Then `E01` (Rust backend skeleton) and `E02` (auth with Keycloak).
-- [ ] Decide market positioning and primary target group (`docs/decisions.md` #15, analysis in `docs/market.md`); verify the ◐-marked competitor facts before publishing.
+- [ ] Decide market positioning and primary target group (`docs/decisions.md` #15, analysis in `docs/market.md`); verify the ◐-marked competitor facts before publishing. Target-group-independent consequences are already in the roadmap (new epic `E20` DATEV export/migration, E05-02, E05-11, E05-13, E12-13).
